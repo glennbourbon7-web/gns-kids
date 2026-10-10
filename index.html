@@ -1,0 +1,757 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="icon" href="favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+<link rel="icon" type="image/png" sizes="192x192" href="favicon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="theme-color" content="#930000">
+<meta property="og:title" content="GNS Kids">
+<meta property="og:description" content="Shows, games, music and fun for kids from GNS.">
+<meta property="og:image" content="logo.png">
+<title>GNS Kids</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@400;600;700&display=swap">
+<style>
+body{margin:0}
+
+/* Layout: chunky red masthead with logo badge, section tabs, then empty story slots per section */
+:root{
+  --brand:#930000; --brand-2:#b31212; --bg:#fff8f6; --surface:#ffffff; --fg:#2a1615; --muted:#7d6461; --line:#f0dcd9; --chip:#ffe9e5;
+  --display:"Fredoka","Trebuchet MS",system-ui,sans-serif; --body:"Nunito","Segoe UI",system-ui,sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --brand:#930000; --brand-2:#c43a3a; --bg:#1a1111; --surface:#241817; --fg:#f7e9e7; --muted:#b89d99; --line:#3a2725; --chip:#3a2120; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --brand:#930000; --brand-2:#c43a3a; --bg:#1a1111; --surface:#241817; --fg:#f7e9e7; --muted:#b89d99; --line:#3a2725; --chip:#3a2120; color-scheme:dark}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:16px;line-height:1.55}
+.wrap{max-width:1120px;margin:0 auto;padding-inline:16px}
+header.mast{background:var(--brand);color:#fff}
+.mast .wrap{display:flex;align-items:center;gap:18px;padding-block:14px}
+.mast img{width:76px;height:76px;border-radius:50%;background:#fff;flex:none}
+.mast h1{font-family:var(--display);font-weight:700;font-size:clamp(1.8rem,4vw,2.6rem);margin:0;line-height:1;letter-spacing:.01em}
+.mast p{margin:4px 0 0;font-weight:600;opacity:.9}
+.mast .date{margin-left:auto;font-family:var(--display);font-weight:500;font-size:.95rem;opacity:.9;text-align:right}
+nav.tabs{background:var(--surface);border-bottom:2px solid var(--line);position:sticky;top:env(safe-area-inset-top,0px);z-index:5}
+nav.tabs .wrap{display:flex;gap:8px;overflow-x:auto;padding-block:10px;scrollbar-width:none}
+nav.tabs a{font-family:var(--display);font-weight:600;color:var(--fg);text-decoration:none;padding:7px 16px;border-radius:999px;background:var(--chip);white-space:nowrap}
+nav.tabs a:hover,nav.tabs a:focus-visible{background:var(--brand-2);color:#fff;outline:none}
+main .wrap{display:grid;gap:40px;padding-block:32px 56px}
+.lead{display:grid;grid-template-columns:1.6fr 1fr;gap:20px}
+.slot{border:2.5px dashed var(--line);border-radius:18px;background:var(--surface);display:grid;place-items:center;text-align:center;color:var(--muted);padding:24px;min-height:150px}
+.slot.big{min-height:320px}
+.slot strong{display:block;font-family:var(--display);font-weight:600;color:var(--fg);font-size:1.15rem}
+section h2{font-family:var(--display);font-weight:700;font-size:1.6rem;margin:0 0 14px;display:flex;align-items:center;gap:10px}
+section h2::before{content:"";width:14px;height:14px;border-radius:50%;background:var(--brand-2)}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+footer{background:var(--surface);border-top:2px solid var(--line);color:var(--muted);font-size:.9rem}
+footer .wrap{padding-block:20px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+@media (max-width:760px){.lead{grid-template-columns:1fr}.grid{grid-template-columns:1fr}.mast .date{display:none}.slot.big{min-height:220px}}
+
+/* Games */
+.games{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}
+.gcard{background:var(--surface);border:2px solid var(--line);border-radius:20px;overflow:hidden;display:flex;flex-direction:column}
+.gart{background:var(--brand);color:#fff;min-height:170px;display:grid;place-items:center;position:relative;overflow:hidden}
+.gart img{width:120px;height:120px;border-radius:50%;background:#fff;border:4px solid #fff}
+.gart .stamps{display:flex;gap:14px;flex-wrap:wrap;justify-content:center;padding:16px}
+.stamp{font-family:var(--display);font-weight:700;font-size:1.3rem;letter-spacing:.08em;text-transform:uppercase;border:4px solid currentColor;border-radius:10px;padding:4px 14px;background:rgba(255,255,255,.95)}
+.stamp.ok{color:#1d7a3a;transform:rotate(-6deg)}
+.stamp.no{color:#b31212;transform:rotate(5deg)}
+.gbody{padding:18px 20px 20px;display:flex;flex-direction:column;gap:10px;flex:1}
+.gbody h3{font-family:var(--display);font-weight:700;font-size:1.35rem;margin:0}
+.gbody p{margin:0;color:var(--muted)}
+.btn{font-family:var(--display);font-weight:600;font-size:1.05rem;border:0;border-radius:999px;padding:11px 22px;cursor:pointer;background:var(--brand-2);color:#fff;align-self:flex-start;margin-top:auto}
+.btn:hover{filter:brightness(1.08)}
+.btn:focus-visible,.choice:focus-visible,.x:focus-visible{outline:3px solid var(--fg);outline-offset:3px}
+.btn.green{background:#1d7a3a}
+.btn.ghost{background:var(--chip);color:var(--fg)}
+/* Modal */
+.modal{position:fixed;inset:0;z-index:50;background:rgba(20,6,6,.6);display:grid;place-items:center;padding:16px}
+.panel{background:var(--surface);color:var(--fg);border-radius:22px;width:100%;max-width:640px;max-height:calc(100% - 8px);overflow:auto;box-shadow:0 20px 60px rgba(0,0,0,.35)}
+.phead{background:var(--brand);color:#fff;display:flex;align-items:center;gap:12px;padding:12px 14px 12px 20px;position:sticky;top:0}
+.phead h3{font-family:var(--display);font-weight:700;margin:0;font-size:1.2rem;flex:1}
+.x{background:rgba(255,255,255,.18);color:#fff;border:0;border-radius:999px;font-family:var(--display);font-weight:600;padding:7px 14px;cursor:pointer}
+.pbody{padding:22px;display:grid;gap:16px}
+.meta{font-family:var(--display);font-weight:500;color:var(--muted);font-size:.9rem;letter-spacing:.04em;text-transform:uppercase}
+.scene{display:flex;gap:16px;align-items:flex-start}
+.scene img{width:72px;height:72px;border-radius:50%;flex:none;background:#fff}
+.scene p{margin:0;font-size:1.08rem;min-width:0}
+.scene h4{font-family:var(--display);font-weight:700;font-size:1.4rem;margin:0 0 6px;text-wrap:balance}
+.choices{display:grid;gap:10px}
+.choice{font-family:var(--body);font-weight:700;font-size:1rem;text-align:left;border:2px solid var(--line);background:var(--chip);color:var(--fg);border-radius:14px;padding:13px 16px;cursor:pointer}
+.choice:hover{border-color:var(--brand-2)}
+.bar{height:10px;background:var(--chip);border-radius:99px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--brand-2);transition:width .3s}
+.end{border-radius:14px;padding:12px 16px;font-weight:700}
+.end.win{background:#e3f4e8;color:#16602d}
+.end.lose{background:var(--chip);color:var(--fg)}
+.article{border:2px solid var(--line);border-radius:16px;padding:18px;position:relative;background:var(--bg)}
+.article .kick{font-family:var(--display);font-weight:600;color:var(--brand-2);text-transform:uppercase;letter-spacing:.08em;font-size:.8rem}
+.article h4{font-family:var(--display);font-weight:700;font-size:1.45rem;margin:4px 0 8px;text-wrap:balance;line-height:1.2}
+.article p{margin:0}
+.article .stamp{position:absolute;right:14px;top:12px;font-size:1.1rem}
+.row{display:flex;gap:10px;flex-wrap:wrap}
+.row .btn{margin-top:0}
+.feedback{border-radius:14px;padding:12px 16px}
+.feedback.good{background:#e3f4e8;color:#16602d}
+.feedback.bad{background:#fde3e0;color:#8c1414}
+.big-score{font-family:var(--display);font-weight:700;font-size:3rem;line-height:1;font-variant-numeric:tabular-nums}
+@media (max-width:760px){.games{grid-template-columns:1fr}.scene img{width:56px;height:56px}}
+@media (prefers-reduced-motion:reduce){.bar i{transition:none}}
+
+/* Music */
+.tracks{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.track{background:var(--surface);border:2px solid var(--line);border-radius:20px;overflow:hidden;display:flex;flex-direction:column}
+.track img{display:block;width:100%;height:auto;aspect-ratio:1;max-width:100%}
+.tinfo{padding:14px 16px 16px;display:grid;gap:8px;min-width:0}
+.tinfo h3{font-family:var(--display);font-weight:700;font-size:1.25rem;margin:0}
+.tinfo p{margin:0;color:var(--muted);font-weight:600}
+.dur{font-variant-numeric:tabular-nums}
+.tinfo audio{width:100%;height:40px}
+@media (max-width:760px){.tracks{grid-template-columns:1fr}}
+
+/* Crafts */
+:root{--paper:#fbf7ee;--ink:#1d1a16;--found:#ffd84d;--sel:#ffb3a8}
+.panel.wide{max-width:960px}
+.mini-paper{background:var(--paper);color:var(--ink);width:150px;padding:10px 12px;border-radius:4px;transform:rotate(-4deg);display:grid;gap:6px;box-shadow:0 6px 0 rgba(0,0,0,.18)}
+.mini-paper b{font-family:Georgia,serif;font-size:1rem;text-align:center;border-bottom:2px solid var(--ink);padding-bottom:3px}
+.mini-paper i{height:34px;background:#d8cfbd;display:block}
+.mini-paper span{height:5px;background:#9b9184;display:block;border-radius:2px}
+.mini-paper span.short{width:60%}
+.mini-grid,.mini-cross{display:grid;grid-template-columns:repeat(4,30px);gap:4px}
+.mini-grid span,.mini-cross span{width:30px;height:30px;display:grid;place-items:center;background:#fff;color:#2a1615;font-family:var(--display);font-weight:700;border-radius:6px}
+.mini-grid span.hl{background:var(--found)}
+.mini-cross span{border-radius:2px}
+.mini-cross span.blk{background:#5c0000}
+/* Newspaper maker */
+.nm{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.3fr);gap:22px;align-items:start}
+.form{display:grid;gap:12px}
+.form label{display:grid;gap:4px;font-weight:700;font-size:.92rem}
+.form input,.form textarea{font:inherit;font-weight:400;border:2px solid var(--line);background:var(--bg);color:var(--fg);border-radius:10px;padding:9px 11px;width:100%}
+.form input:focus,.form textarea:focus{outline:none;border-color:var(--brand-2)}
+.form textarea{min-height:130px;resize:vertical}
+.paper{background:var(--paper);color:var(--ink);border-radius:6px;padding:20px 22px;box-shadow:0 2px 0 var(--line),0 10px 30px rgba(0,0,0,.12);min-width:0}
+.paper .pname{font-family:"Old Standard TT",Georgia,"Times New Roman",serif;font-weight:700;font-size:clamp(1.7rem,4vw,2.6rem);text-align:center;line-height:1;margin:0;word-break:break-word}
+.paper .pline{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;border-top:3px double var(--ink);border-bottom:1px solid var(--ink);margin:10px 0 14px;padding:4px 0;font-size:.78rem;text-transform:uppercase;letter-spacing:.08em}
+.paper .phl{font-family:"Old Standard TT",Georgia,serif;font-weight:700;font-size:clamp(1.4rem,3vw,1.9rem);line-height:1.15;margin:0 0 6px;text-wrap:balance;word-break:break-word}
+.paper .pby{font-style:italic;font-size:.9rem;margin:0 0 10px}
+.paper figure{margin:0 0 10px}
+.paper figure img{width:100%;max-height:260px;object-fit:cover;display:block;filter:grayscale(.15)}
+.paper figcaption{font-size:.8rem;font-style:italic;margin-top:4px}
+.paper .pbody{columns:2;column-gap:20px;font-family:Georgia,serif;font-size:.95rem;line-height:1.5;white-space:pre-wrap;word-break:break-word}
+.paper .pbody::first-letter{font-size:2.6em;float:left;line-height:.85;padding-right:4px;font-weight:700}
+.tip{color:var(--muted);font-size:.9rem;margin:0}
+/* Word search */
+.ws{display:grid;grid-template-columns:auto minmax(0,1fr);gap:20px;align-items:start}
+.wsgrid{display:grid;gap:3px;touch-action:manipulation;user-select:none}
+.wsgrid button{width:34px;height:34px;border:0;border-radius:7px;background:var(--chip);color:var(--fg);font-family:var(--display);font-weight:700;font-size:1.05rem;cursor:pointer;padding:0}
+.wsgrid button.sel{background:var(--sel);color:#2a1615}
+.wsgrid button.found{background:var(--found);color:#2a1615}
+.wsgrid button:focus-visible{outline:3px solid var(--fg);outline-offset:1px}
+.wlist{display:flex;flex-wrap:wrap;gap:8px;list-style:none;margin:0;padding:0}
+.wlist li{font-family:var(--display);font-weight:600;background:var(--chip);border-radius:999px;padding:5px 12px}
+.wlist li.done{text-decoration:line-through;opacity:.55}
+/* Crossword */
+.cw{display:grid;grid-template-columns:auto minmax(0,1fr);gap:22px;align-items:start}
+.cwwrap{overflow-x:auto;max-width:100%}
+.cwgrid{display:grid;gap:2px}
+.cwgrid .c{width:34px;height:34px;position:relative}
+.cwgrid .c.on{background:var(--ink);padding:2px;border-radius:3px}
+.cwgrid input{width:100%;height:100%;border:0;border-radius:2px;background:var(--paper);color:var(--ink);text-align:center;font-family:var(--display);font-weight:700;font-size:1.1rem;text-transform:uppercase;padding:0}
+.cwgrid input:focus{outline:none;background:var(--found)}
+.cwgrid input.bad{background:var(--sel)}
+.cwgrid input.good{color:#16602d}
+.cwgrid .n{position:absolute;top:2px;left:4px;font-size:.6rem;font-weight:700;color:var(--ink);pointer-events:none;z-index:1}
+.clues h4{font-family:var(--display);font-size:1.1rem;margin:0 0 6px}
+.clues ol{margin:0 0 14px;padding:0;list-style:none;display:grid;gap:5px}
+.clues li b{display:inline-block;min-width:1.6em;font-variant-numeric:tabular-nums}
+@media (max-width:760px){.nm,.ws,.cw{grid-template-columns:1fr}.wsgrid button{width:29px;height:29px;font-size:.95rem}.cwgrid .c{width:29px;height:29px}.paper .pbody{columns:1}}
+
+/* Featured */
+.feat{display:grid;gap:20px}
+.eyebrow{font-family:var(--display);font-weight:600;font-size:.8rem;letter-spacing:.1em;text-transform:uppercase;color:var(--brand-2)}
+.welcome{background:var(--surface);border:2px solid var(--line);border-radius:22px;padding:26px;display:grid;grid-template-columns:auto minmax(0,1fr);gap:26px;align-items:start}
+.welcome > img{width:150px;height:150px;border-radius:50%;background:#fff;border:5px solid var(--brand)}
+.wtext{display:grid;gap:10px;max-width:68ch}
+.wtext h3,.stext h3{font-family:var(--display);font-weight:700;font-size:clamp(1.7rem,3.5vw,2.3rem);margin:0;line-height:1.1;text-wrap:balance}
+.wtext p,.stext p{margin:0}
+.wtext .sign{font-family:var(--display);font-weight:600;color:var(--brand-2)}
+.wtext .row{margin-top:6px}
+a.btn{text-decoration:none;display:inline-block}
+.spot{background:#3a2154;color:#fff;border-radius:22px;overflow:hidden;display:grid;grid-template-columns:minmax(0,300px) minmax(0,1fr)}
+.spot img{display:block;width:100%;height:auto;aspect-ratio:1;max-width:100%}
+.stext{padding:26px;display:grid;gap:10px;align-content:center}
+.stext .eyebrow{color:#ffb3cf}
+.stext .by{font-weight:700;color:#e6d6ff}
+.stext audio{width:100%;max-width:420px;margin-top:6px}
+@media (max-width:760px){.welcome{grid-template-columns:1fr;padding:20px}.welcome > img{width:110px;height:110px}.spot{grid-template-columns:1fr}.stext{padding:20px}}
+
+/* Puzzle effects */
+:root{--good:#2fbf5b}
+.wsgrid{position:relative}
+.wside{display:grid;gap:14px;align-content:start}
+.cwwrap{padding:8px}
+.cwgrid input.solved{background:var(--good);color:#fff}
+.clues li.done{color:var(--muted);text-decoration:line-through}
+.spark{position:absolute;left:50%;top:50%;width:7px;height:7px;border-radius:50%;background:var(--good);box-shadow:0 0 8px var(--good);pointer-events:none;z-index:3;animation:spark .75s ease-out forwards}
+@keyframes spark{from{transform:translate(-50%,-50%) scale(1);opacity:1}to{transform:translate(calc(-50% + var(--dx)),calc(-50% + var(--dy))) scale(.2);opacity:0}}
+.pop{animation:pop .45s ease}
+@keyframes pop{40%{transform:scale(1.25)}}
+@media (prefers-reduced-motion:reduce){.pop,.spark{animation:none}}
+</style>
+</head>
+<body>
+
+<header class="mast">
+  <div class="wrap">
+    <img src="logo.png" alt="GNS Kids logo">
+    <div>
+      <h1>GNS Kids</h1>
+      <p>Shows, games and fun for kids</p>
+    </div>
+    <div class="date" id="today"></div>
+  </div>
+</header>
+
+<nav class="tabs" aria-label="Sections">
+  <div class="wrap">
+    <a href="#featured">Featured</a>
+    <a href="#shows">Shows</a>
+    <a href="#games">Games</a>
+    <a href="#music">Music</a>
+    <a href="#crafts">Crafts &amp; Activities</a>
+  </div>
+</nav>
+
+<main>
+  <div class="wrap">
+    <section id="featured">
+      <h2>Featured</h2>
+      <div class="feat">
+        <article class="welcome">
+          <img class="logo-copy" alt="GNS Kids host">
+          <div class="wtext">
+            <div class="eyebrow">Welcome</div>
+            <h3>Welcome to GNS Kids!</h3>
+            <p>Hi there, and welcome to GNS Kids, the home for shows, games, music and fun from the GNS family.</p>
+            <p>Follow Richard Powers on his big journey from a tiny hovel in Slovenia all the way to Speaker of the House. Sit in the editor's chair at the GNS Fact Desk and catch the fake news before it goes out. Listen to new songs, solve the crossword, or write your very own newspaper.</p>
+            <p>We are adding new things all the time, so come back soon and see what's new!</p>
+            <p class="sign">The GNS Kids Team</p>
+            <div class="row"><a class="btn" href="#games">Play a game</a><a class="btn ghost" href="#music">Listen to music</a></div>
+          </div>
+        </article>
+        <article class="spot">
+          <img src="covers/queen-of-rest.svg" alt="Queen of Rest cover art" width="500" height="500">
+          <div class="stext">
+            <div class="eyebrow">Featured song</div>
+            <h3>Queen of Rest</h3>
+            <p class="by">Julie Appleseed · <span class="dur">2:54</span></p>
+            <p>Grab a pillow and kick back. Every queen needs her nap time, and this one rules the land of rest.</p>
+            <audio id="audio-feat-queen" controls preload="none" src="music/queen-of-rest.mp3"></audio>
+          </div>
+        </article>
+      </div>
+    </section>
+    <section id="shows"><h2>Shows</h2><div class="grid"><div class="slot">Coming soon</div><div class="slot">Coming soon</div><div class="slot">Coming soon</div></div></section>
+    <section id="games"><h2>Games</h2>
+      <div class="games">
+        <article class="gcard">
+          <div class="gart"><img class="logo-copy" alt="Richard Powers"></div>
+          <div class="gbody">
+            <h3>From Hovel to the House</h3>
+            <p>Make the choices in Richard Powers's life, from a leaky hovel in Slovenia to building GNS with Glenn Bourbon and becoming Speaker of the House.</p>
+            <button class="btn" id="play-story">Play</button>
+          </div>
+        </article>
+        <article class="gcard">
+          <div class="gart"><div class="stamps"><span class="stamp ok">Approved</span><span class="stamp no">Fake News</span></div></div>
+          <div class="gbody">
+            <h3>GNS Fact Desk</h3>
+            <p>You're the editor today. Read each article, approve the real ones, and stamp the fakes before they hit the air.</p>
+            <button class="btn" id="play-desk">Play</button>
+          </div>
+        </article>
+      </div>
+    </section>
+    <section id="music"><h2>Music</h2>
+      <div class="tracks">
+        <article class="track">
+          <img src="covers/news-never-sleeps.svg" alt="News Never Sleeps cover art" width="500" height="500">
+          <div class="tinfo">
+            <h3>News Never Sleeps</h3>
+            <p>Johnny Raj Appleseed · <span class="dur">2:58</span></p>
+            <audio id="audio-news-never-sleeps" controls preload="none" src="music/news-never-sleeps.mp3"></audio>
+          </div>
+        </article>
+        <article class="track">
+          <img src="covers/billionaire-problems.svg" alt="Billionaire Problems cover art" width="500" height="500">
+          <div class="tinfo">
+            <h3>Billionaire Problems</h3>
+            <p>Johnny Raj Appleseed · <span class="dur">2:27</span></p>
+            <audio id="audio-billionaire-problems" controls preload="none" src="music/billionaire-problems.mp3"></audio>
+          </div>
+        </article>
+        <article class="track">
+          <img src="covers/queen-of-rest.svg" alt="Queen of Rest cover art" width="500" height="500">
+          <div class="tinfo">
+            <h3>Queen of Rest</h3>
+            <p>Julie Appleseed · <span class="dur">2:54</span></p>
+            <audio id="audio-queen-of-rest" controls preload="none" src="music/queen-of-rest.mp3"></audio>
+          </div>
+        </article>
+      </div>
+    </section>
+    <section id="crafts"><h2>Crafts &amp; Activities</h2>
+      <div class="grid">
+        <article class="gcard">
+          <div class="gart"><div class="mini-paper"><b>The Daily Kid</b><i></i><span></span><span></span><span class="short"></span></div></div>
+          <div class="gbody">
+            <h3>Make Your Own Newspaper</h3>
+            <p>Name your paper, write a headline and story, add a picture, and see your front page come together.</p>
+            <button class="btn" id="play-paper">Start writing</button>
+          </div>
+        </article>
+        <article class="gcard">
+          <div class="gart"><div class="mini-grid" aria-hidden="true"><span>G</span><span class="hl">N</span><span>Q</span><span>A</span><span>W</span><span class="hl">E</span><span>K</span><span>N</span><span>S</span><span>T</span><span class="hl">W</span><span>C</span><span>R</span><span>B</span><span>Z</span><span class="hl">S</span></div></div>
+          <div class="gbody">
+            <h3>GNS Word Search</h3>
+            <p>Find 10 hidden words. Every puzzle picks new words from a bank of over 200. Tap the first letter, then the last letter.</p>
+            <button class="btn" id="play-ws">Play</button>
+          </div>
+        </article>
+        <article class="gcard">
+          <div class="gart"><div class="mini-cross" aria-hidden="true"><span>N</span><span>E</span><span>W</span><span>S</span><span class="blk"></span><span></span><span class="blk"></span><span></span><span class="blk"></span><span></span><span class="blk"></span><span></span></div></div>
+          <div class="gbody">
+            <h3>GNS Crossword</h3>
+            <p>A brand-new puzzle every time, with clues about news, Congress, animals, space and more.</p>
+            <button class="btn" id="play-cw">Play</button>
+          </div>
+        </article>
+      </div>
+    </section>
+  </div>
+</main>
+
+<footer>
+  <div class="wrap"><span>© 2026 GNS Kids · A GNS service</span><span>More fun coming soon</span></div>
+</footer>
+
+
+<div class="modal" id="modal" hidden role="dialog" aria-modal="true" aria-labelledby="mtitle">
+  <div class="panel">
+    <div class="phead"><h3 id="mtitle"></h3><button class="x" id="mclose">Close</button></div>
+    <div class="pbody" id="mbody"></div>
+  </div>
+</div>
+
+<script>
+(function(){
+  var LOGO = document.querySelector('.mast img').src;
+  document.querySelectorAll('.logo-copy').forEach(function(i){ i.src = LOGO; });
+  var modal = document.getElementById('modal'), mbody = document.getElementById('mbody'), mtitle = document.getElementById('mtitle');
+  var lastBtn = null;
+  function open(title, btn, wide){ lastBtn = btn; mtitle.textContent = title; modal.querySelector('.panel').classList.toggle('wide', !!wide); modal.hidden = false; document.body.style.overflow = 'hidden'; }
+  function close(){ modal.hidden = true; document.body.style.overflow = ''; mbody.innerHTML = ''; if (lastBtn) lastBtn.focus(); }
+  document.getElementById('mclose').onclick = close;
+  modal.addEventListener('click', function(e){ if (e.target === modal) close(); });
+  document.addEventListener('keydown', function(e){ if (e.key === 'Escape' && !modal.hidden) close(); });
+  function el(tag, cls, text){ var e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; }
+
+  window.GNS = { open: open, el: el, body: function(){ return mbody; } };
+  /* ---------- Game 1: From Hovel to the House ---------- */
+  var S = {
+    born: { ch:1, title:'A Leaky Little Hovel', text:'Richard Powers is born in a tiny, drafty hovel in a village in Slovenia. The roof leaks, the floor is dirt, and when it rains the goats come inside too.', choices:[
+      ['Help Mom patch the leaky roof','school'],
+      ['Read the old newspapers stuffed in the walls to keep out the wind','school'] ] },
+    school: { ch:2, title:'The Village Newspaper', text:'At the village school, Richard starts a one-page newspaper written by hand. He reports on everything: the bake sale, the runaway pig, the broken bridge. Some grown-ups say he is too nosy.', choices:[
+      ['Keep writing it. People deserve to know what is going on!','ticket'],
+      ['Give up the paper and become a full-time goat herder','goatEnd'] ] },
+    goatEnd: { end:'lose', title:'King of the Goats', text:'Richard becomes the best goat herder in all of Slovenia. The goats are very happy. But there is no GNS and no Congress.' },
+    ticket: { ch:3, title:'A Ticket to America', text:'When he turns 18, Richard has saved every coin he ever earned. It is just enough for a boat ticket to America.', choices:[
+      ['Board the ship to New York','ny'],
+      ['Spend it all on the biggest cake in the village','cakeEnd'] ] },
+    cakeEnd: { end:'lose', title:'One Very Big Cake', text:'The cake is amazing. It is also gone by dinner, and so is Richard\'s money. He never makes it to America.' },
+    ny: { ch:4, title:'Meeting Glenn Bourbon', text:'New York is loud and huge. Richard sweeps floors at a newspaper office at night. One night he finds a sharp young guy named Glenn Bourbon trying to fix a jammed printing press all by himself.', choices:[
+      ['Roll up your sleeves and help Glenn fix the press','friends'],
+      ['Keep sweeping. Not your problem.','aloneEnd'] ] },
+    aloneEnd: { end:'lose', title:'Sweeping Forever', text:'Richard keeps his head down and keeps sweeping. Years go by. Every great team starts with a friend, and Richard missed his.' },
+    friends: { ch:5, title:'A Big Idea', text:'The press is fixed by sunrise, and Richard and Glenn are best friends. Over breakfast, Glenn says: "What if we started our own news network?"', choices:[
+      ['Shake hands and start GNS together','basement'],
+      ['Say it is way too risky','riskyEnd'] ] },
+    riskyEnd: { end:'lose', title:'Playing It Safe', text:'Richard stays safe at his old job. Glenn waits, but the idea fades away. Sometimes you have to take a chance!' },
+    basement: { ch:6, title:'GNS Begins', text:'GNS starts in a tiny basement with one camera, two desks, and a lot of coffee. Money is tight. How should GNS win viewers?', choices:[
+      ['Report true stories that nobody else is covering','grow'],
+      ['Make up wild stories to get more viewers','fakeEnd'] ] },
+    fakeEnd: { end:'lose', title:'Caught Making It Up', text:'Viewers find out the stories are fake, and they switch the channel. GNS shuts down. Real news matters!' },
+    grow: { ch:7, title:'Media Mogul', text:'People trust GNS! It grows from one basement into a giant media company. Richard runs it with Glenn right by his side. But neighbors back home keep asking Richard to help fix problems in their town.', choices:[
+      ['Run for Congress','campaign'],
+      ['Stay in the big office forever','officeEnd'] ] },
+    officeEnd: { end:'lose', title:'Happy, But Not Finished', text:'GNS is a huge hit, and Richard has a very comfy chair. But he never tries public service, so the story stops here.' },
+    campaign: { ch:8, title:'Election Day Is Coming', text:'Richard is running for the House of Representatives! How will he campaign?', choices:[
+      ['Knock on every door and listen to what voters need','term1'],
+      ['Go on TV and yell insults at the other candidate','loseEnd'] ] },
+    loseEnd: { end:'lose', title:'Voters Said No', text:'Voters do not like all the yelling. Richard loses the election and goes back to GNS.' },
+    term1: { ch:9, title:'Welcome to Washington', text:'Richard wins! He takes the oath and joins the House of Representatives in Washington, D.C. Two years later, it is election time again.', choices:[
+      ['Keep your promises and visit home every chance you get','terms'],
+      ['Forget about home. Washington is more fun.','homeEnd'] ] },
+    homeEnd: { end:'lose', title:'One and Done', text:'Voters back home feel forgotten. Richard serves just one term.' },
+    terms: { ch:10, title:'Three Terms in the House', text:'Voters re-elect Richard again, and again. Now he is a three-term congressman! The House needs a new Speaker, and members ask Richard to run.', choices:[
+      ['Work with members from both sides to earn their votes','speaker'],
+      ['Refuse to talk to anyone who disagrees with you','speakerEnd'] ] },
+    speakerEnd: { end:'lose', title:'Not Enough Votes', text:'To become Speaker you need a lot of votes, and you cannot get them by ignoring people. Someone else wins the job.' },
+    speaker: { end:'win', title:'Mr. Speaker!', text:'Richard Powers is sworn in as Speaker of the House! From a leaky hovel in Slovenia to building GNS to leading the House of Representatives. Up in the gallery, his old friend Glenn Bourbon cheers the loudest.' }
+  };
+  var TOTAL = 10;
+  function story(id){
+    var s = S[id]; mbody.innerHTML = '';
+    var ch = s.end === 'win' ? TOTAL : (s.ch || null);
+    if (!s.end){
+      mbody.appendChild(el('div','meta','Chapter ' + s.ch + ' of ' + TOTAL));
+      var bar = el('div','bar'), i = el('i'); i.style.width = (s.ch / TOTAL * 100) + '%'; bar.appendChild(i); mbody.appendChild(bar);
+    }
+    var sc = el('div','scene'), img = el('img'); img.src = LOGO; img.alt = 'Richard Powers'; sc.appendChild(img);
+    var tx = el('div'); tx.style.minWidth = '0'; tx.appendChild(el('h4',null,s.title)); tx.appendChild(el('p',null,s.text)); sc.appendChild(tx);
+    mbody.appendChild(sc);
+    if (s.end){
+      mbody.appendChild(el('div','end ' + s.end, s.end === 'win' ? 'You did it! You finished Richard\'s whole story.' : 'The End? That is not how Richard\'s story really goes. Try again!'));
+      var row = el('div','row'), again = el('button','btn','Play again'); again.onclick = function(){ story('born'); }; row.appendChild(again);
+      if (s.end === 'lose'){ var back = el('button','btn ghost','Go back one step'); back.onclick = function(){ story(prev); }; row.appendChild(back); }
+      mbody.appendChild(row); again.focus(); return;
+    }
+    var cs = el('div','choices');
+    s.choices.forEach(function(c){ var b = el('button','choice',c[0]); b.onclick = function(){ prev = id; story(c[1]); }; cs.appendChild(b); });
+    mbody.appendChild(cs); cs.firstChild.focus();
+  }
+  var prev = 'born';
+  document.getElementById('play-story').onclick = function(){ open('From Hovel to the House', this); prev = 'born'; story('born'); };
+
+  /* ---------- Game 2: GNS Fact Desk ---------- */
+  var A = [
+    { k:'Animals', h:'Octopuses Have Three Hearts', b:'Scientists say an octopus has one heart for its body and two more that pump blood through its gills.', real:true, why:'True! Two hearts serve the gills and one serves the rest of the body.' },
+    { k:'History', h:'Honey From Ancient Egyptian Tombs Was Still Good to Eat', b:'Archaeologists found pots of honey thousands of years old that had never spoiled.', real:true, why:'True! Honey has so little water and so much sugar that germs can\'t grow in it.' },
+    { k:'Space', h:'Jupiter Is the Biggest Planet in Our Solar System', b:'More than 1,000 Earths could fit inside the giant gas planet.', real:true, why:'True! Jupiter is the largest planet orbiting our Sun.' },
+    { k:'Space', h:'A Day on Venus Lasts Longer Than Its Year', b:'Venus spins so slowly that it goes all the way around the Sun before it finishes one full spin.', real:true, why:'True! One Venus day is about 243 Earth days, and its year is about 225.' },
+    { k:'Science', h:'Bananas Count as Berries, Scientists Say', b:'Plant experts say bananas fit the science definition of a berry, but strawberries do not.', real:true, why:'True! In botany, a banana is a berry and a strawberry is not.' },
+    { k:'Animals', h:'Wombats Make Cube-Shaped Poop', b:'The Australian animal leaves square little droppings to mark its territory.', real:true, why:'True! Wombat poop really comes out shaped like little cubes.' },
+    { k:'Science', h:'The Eiffel Tower Gets Taller in the Summer', b:'Hot weather makes the metal expand, so the tower grows a few inches.', real:true, why:'True! Metal expands when it heats up, so the tower grows a little in summer.' },
+    { k:'Animals', h:'Sloths Can Hold Their Breath Longer Than Dolphins', b:'By slowing their heartbeat, sloths can stay underwater for up to 40 minutes.', real:true, why:'True! Sloths are surprisingly good swimmers and breath-holders.' },
+    { k:'Space', h:'NASA Confirms the Moon Is Made of Cheese', b:'Astronauts say the Moon tastes a lot like cheddar.', real:false, why:'Fake! The Moon is made of rock and dust. Astronauts brought back rocks, not cheese.' },
+    { k:'Animals', h:'Penguins Spotted Flying South for the Winter', b:'Birdwatchers saw huge flocks of penguins soaring over the ocean.', real:false, why:'Fake! Penguins can\'t fly. They use their wings to swim instead.' },
+    { k:'Animals', h:'Scientists Announce Sharks Are Mammals', b:'A new study says sharks should be grouped with whales and dolphins.', real:false, why:'Fake! Sharks are fish. They breathe with gills, not lungs.' },
+    { k:'Science', h:'The Sun Turns Out to Be Freezing Cold', b:'Researchers say the Sun only looks hot because of its bright color.', real:false, why:'Fake! The Sun\'s surface is thousands of degrees. It is extremely hot.' },
+    { k:'Space', h:'Great Wall of China Easy to See From the Moon', b:'Astronauts say you can spot the wall with just your eyes from the Moon.', real:false, why:'Fake! The wall is long but very thin. You can\'t see it from the Moon without help.' },
+    { k:'Weather', h:'Lightning Can Never Strike the Same Place Twice', b:'Weather experts say once lightning hits a spot, that spot is safe forever.', real:false, why:'Fake! Lightning can hit the same place many times. Tall buildings get struck again and again.' },
+    { k:'Town News', h:'New Law Bans Broccoli From All School Lunches', b:'Starting Monday, broccoli will be against the law everywhere.', real:false, why:'Fake! No law has banned broccoli. Be careful with stories that seem too wild to believe.' },
+    { k:'Animals', h:'Dogs Get the Right to Vote in Elections', b:'Every dog over age three can now vote, as long as it can hold a pen.', real:false, why:'Fake! Only people who are citizens and old enough can vote.' }
+  ];
+  var ROUND = 10, deck, idx, score;
+  function shuffle(a){ a = a.slice(); for (var i = a.length - 1; i > 0; i--){ var j = Math.floor(Math.random() * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
+  function deskStart(){
+    var r = shuffle(A.filter(function(x){return x.real;})).slice(0,5), f = shuffle(A.filter(function(x){return !x.real;})).slice(0,5);
+    deck = shuffle(r.concat(f)); idx = 0; score = 0; deskShow();
+  }
+  function deskShow(){
+    var a = deck[idx]; mbody.innerHTML = '';
+    mbody.appendChild(el('div','meta','Article ' + (idx + 1) + ' of ' + ROUND + ' · Score ' + score));
+    var bar = el('div','bar'), i = el('i'); i.style.width = (idx / ROUND * 100) + '%'; bar.appendChild(i); mbody.appendChild(bar);
+    var art = el('div','article'); art.appendChild(el('div','kick',a.k)); art.appendChild(el('h4',null,a.h)); art.appendChild(el('p',null,a.b));
+    mbody.appendChild(art);
+    var row = el('div','row'), ok = el('button','btn green','Approve'), no = el('button','btn','Fake News');
+    ok.onclick = function(){ judge(true, art, row); }; no.onclick = function(){ judge(false, art, row); };
+    row.appendChild(ok); row.appendChild(no); mbody.appendChild(row); ok.focus();
+  }
+  function judge(saidReal, art, row){
+    var a = deck[idx], right = saidReal === a.real; if (right) score++;
+    art.appendChild(el('span', 'stamp ' + (saidReal ? 'ok' : 'no'), saidReal ? 'Approved' : 'Fake News'));
+    row.remove();
+    mbody.appendChild(el('div', 'feedback ' + (right ? 'good' : 'bad'), (right ? 'Good call! ' : 'Oops! ') + a.why));
+    var next = el('button','btn', idx + 1 < ROUND ? 'Next article' : 'See my score');
+    next.onclick = function(){ idx++; if (idx < ROUND) deskShow(); else deskEnd(); };
+    mbody.appendChild(next); next.focus();
+  }
+  function deskEnd(){
+    mbody.innerHTML = '';
+    var rank = score === 10 ? 'Editor-in-Chief' : score >= 8 ? 'Senior Editor' : score >= 5 ? 'Junior Editor' : 'Intern';
+    var msg = score === 10 ? 'Perfect desk! Not one fake story got past you.' : score >= 8 ? 'Great work. Almost nothing slipped through.' : score >= 5 ? 'Nice start. Read carefully and think about whether a story makes sense.' : 'Keep practicing. Ask yourself: does this sound possible?';
+    mbody.appendChild(el('div','meta','Shift complete'));
+    mbody.appendChild(el('div','big-score', score + ' / ' + ROUND));
+    var h = el('h4',null,'Your rank: ' + rank); h.style.cssText = 'font-family:var(--display);font-size:1.5rem;margin:0';
+    mbody.appendChild(h); mbody.appendChild(el('p',null,msg));
+    var b = el('button','btn','Play again'); b.onclick = deskStart; mbody.appendChild(b); b.focus();
+  }
+  document.getElementById('play-desk').onclick = function(){ open('GNS Fact Desk', this); deskStart(); };
+})();
+</script>
+
+<script>
+(function(){
+  var G = window.GNS; if (!G) return;
+  var el = G.el;
+  function store(k, v){ try { if (v === undefined) return JSON.parse(localStorage.getItem(k) || 'null'); localStorage.setItem(k, JSON.stringify(v)); } catch(e){ return null; } }
+
+  /* ---------- Make Your Own Newspaper ---------- */
+  document.getElementById('play-paper').onclick = function(){
+    G.open('Make Your Own Newspaper', this, true);
+    var d = store('gnsk-paper') || {};
+    var today = new Date().toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'});
+    var b = G.body(); b.innerHTML =
+      '<div class="nm"><form class="form" id="nmform">' +
+      '<label for="nm-name">Newspaper name<input id="nm-name" maxlength="40" placeholder="The Daily Kid"></label>' +
+      '<label for="nm-by">Your name (the reporter)<input id="nm-by" maxlength="40" placeholder="Your name"></label>' +
+      '<label for="nm-hl">Headline<input id="nm-hl" maxlength="90" placeholder="Dog Eats Homework, Again"></label>' +
+      '<label for="nm-story">Your story<textarea id="nm-story" placeholder="Who? What? When? Where? Why? Answer those and you have a story!"></textarea></label>' +
+      '<label for="nm-pic">Add a picture (optional)<input id="nm-pic" type="file" accept="image/*"></label>' +
+      '<label for="nm-cap">Picture caption<input id="nm-cap" maxlength="90" placeholder="What is in the picture?"></label>' +
+      '<p class="tip">Tip: take a screenshot of your front page to save it or show your family.</p>' +
+      '<button type="button" class="btn ghost" id="nm-clear">Start over</button></form>' +
+      '<div class="paper" aria-live="polite"><h2 class="pname" id="p-name"></h2><div class="pline"><span id="p-date"></span><span>Vol. 1 · No. 1</span><span>Price: 1 smile</span></div>' +
+      '<h3 class="phl" id="p-hl"></h3><p class="pby" id="p-by"></p><figure id="p-fig" hidden><img id="p-img" alt=""><figcaption id="p-cap"></figcaption></figure><div class="pbody" id="p-body"></div></div></div>';
+    var f = { name:'nm-name', by:'nm-by', hl:'nm-hl', story:'nm-story', cap:'nm-cap' }, pic = d.pic || null;
+    Object.keys(f).forEach(function(k){ var i = document.getElementById(f[k]); i.value = d[k] || ''; i.addEventListener('input', render); });
+    document.getElementById('nm-pic').addEventListener('change', function(e){
+      var file = e.target.files[0]; if (!file) return;
+      var r = new FileReader(); r.onload = function(){
+        var im = new Image(); im.onload = function(){
+          var c = document.createElement('canvas'), s = Math.min(1, 900 / im.width); c.width = im.width * s; c.height = im.height * s;
+          c.getContext('2d').drawImage(im, 0, 0, c.width, c.height); pic = c.toDataURL('image/jpeg', .8); render();
+        }; im.src = r.result;
+      }; r.readAsDataURL(file);
+    });
+    document.getElementById('nm-clear').onclick = function(){ Object.keys(f).forEach(function(k){ document.getElementById(f[k]).value = ''; }); document.getElementById('nm-pic').value = ''; pic = null; render(); };
+    function v(k){ return document.getElementById(f[k]).value.trim(); }
+    function render(){
+      document.getElementById('p-name').textContent = v('name') || 'The Daily Kid';
+      document.getElementById('p-date').textContent = today;
+      document.getElementById('p-hl').textContent = v('hl') || 'Your Headline Goes Here';
+      document.getElementById('p-by').textContent = 'By ' + (v('by') || 'Star Reporter');
+      document.getElementById('p-body').textContent = v('story') || 'Start typing your story and it will show up right here, just like a real front page.';
+      var fig = document.getElementById('p-fig'); fig.hidden = !pic;
+      if (pic){ document.getElementById('p-img').src = pic; document.getElementById('p-img').alt = v('cap') || 'Story picture'; document.getElementById('p-cap').textContent = v('cap'); }
+      var save = { pic: pic }; Object.keys(f).forEach(function(k){ save[k] = document.getElementById(f[k]).value; });
+      if (store('gnsk-paper', save) === null && pic) { save.pic = null; store('gnsk-paper', save); }
+    }
+    render();
+  };
+
+  /* ---------- Word bank (shared by both puzzles) ---------- */
+  var BANK = [["NEWS", "Information about what just happened in the world"], ["ANCHOR", "The person who reads the news on TV from a big desk"], ["REPORTER", "A person who finds out the facts and tells the story"], ["HEADLINE", "The big, bold title at the top of a news story"], ["CAMERA", "It records the video for a TV show"], ["STUDIO", "The room where a TV show is filmed"], ["STORY", "A news article is also called a news ____"], ["EDITOR", "The person who checks and fixes stories before they go out"], ["INTERVIEW", "When a reporter asks someone questions"], ["BROADCAST", "To send a show out over TV or radio"], ["CHANNEL", "The number you pick on TV to find a show"], ["FORECAST", "A weather report about what tomorrow will be like"], ["WEATHER", "Sunny, rainy, or snowy: what it is like outside"], ["PRESS", "Another name for news reporters as a group"], ["SCOOP", "A big story that one reporter gets first"], ["SOURCE", "A person or place a reporter gets facts from"], ["FACT", "Something that is true and can be proven"], ["RUMOR", "A story people pass around that may not be true"], ["LIVE", "When a show is happening right now, it is ____"], ["SPORTS", "The news section about games and teams"], ["BREAKING", "____ news is happening right this minute"], ["VIDEO", "Moving pictures you can watch"], ["RADIO", "It plays news and music you can hear but not see"], ["SCRIPT", "The written words the anchor reads out loud"], ["PODCAST", "A show you listen to online, one episode at a time"], ["COLUMN", "A regular article written by the same person"], ["CAPTION", "The words under a picture that explain it"], ["DEADLINE", "The time when a story must be finished"], ["PRINT", "To put words on paper with a machine"], ["MAGAZINE", "A glossy booklet that comes out every week or month"], ["PHOTO", "A picture taken with a camera"], ["SCREEN", "The flat part of a TV that you watch"], ["SIGNAL", "It carries a TV show through the air to your house"], ["REMOTE", "The clicker you use to change channels"], ["HOST", "The person who leads a TV show"], ["GUEST", "A visitor who comes on a show"], ["EPISODE", "One part of a TV series"], ["AUDIENCE", "All the people watching or listening"], ["RATINGS", "Numbers that show how many people watched a show"], ["NETWORK", "A group of TV channels, like GNS"], ["CONGRESS", "The House and the Senate together make up this"], ["SENATE", "The part of Congress with 100 members"], ["HOUSE", "The ____ of Representatives"], ["SPEAKER", "The leader of the House of Representatives"], ["VOTE", "To choose someone in an election"], ["ELECTION", "The day when people choose their leaders"], ["BALLOT", "The paper or screen you mark when you vote"], ["CAPITOL", "The building in Washington, D.C. where Congress meets"], ["PRESIDENT", "The leader of the United States"], ["LAW", "A rule that everyone must follow"], ["BILL", "An idea for a new law"], ["MAYOR", "The leader of a city"], ["GOVERNOR", "The leader of a state"], ["JUDGE", "The person in charge of a courtroom"], ["COURT", "The place where judges decide cases"], ["FLAG", "The American one has stars and stripes"], ["EAGLE", "The bald ____ is a symbol of the USA"], ["CITIZEN", "A member of a country"], ["DEBATE", "When candidates argue about their ideas on stage"], ["CAMPAIGN", "All the work it takes to win an election"], ["CANDIDATE", "A person who is running for office"], ["TERM", "How long someone serves in office"], ["VETO", "When the president says no to a bill"], ["TAX", "Money people pay to the government"], ["STATE", "There are 50 of these in the USA"], ["NATION", "Another word for country"], ["LEADER", "The person in charge"], ["DISTRICT", "The area a member of the House represents"], ["COMMITTEE", "A small group in Congress that studies bills"], ["SPEECH", "A talk given to a crowd"], ["GAVEL", "The small wooden hammer the Speaker bangs"], ["OATH", "A promise you make when you take office"], ["POLL", "A survey that asks what people think"], ["PARTY", "A group of people with similar political ideas"], ["SONG", "Music with words you can sing"], ["SINGER", "A person who sings"], ["GUITAR", "An instrument with six strings"], ["DRUMS", "Instruments you hit with sticks"], ["PIANO", "An instrument with black and white keys"], ["VIOLIN", "A small string instrument played with a bow"], ["TRUMPET", "A brass instrument you blow into"], ["FLUTE", "A silver instrument you blow across"], ["BAND", "A group of musicians who play together"], ["CHORUS", "The part of a song that repeats"], ["BEAT", "The steady pulse in music you can clap to"], ["RHYTHM", "A pattern of beats"], ["CONCERT", "A live music show"], ["ALBUM", "A collection of songs released together"], ["LYRICS", "The words of a song"], ["MELODY", "The tune of a song"], ["STAGE", "The raised floor where performers stand"], ["DANCE", "To move your body to music"], ["LULLABY", "A quiet song that helps you fall asleep"], ["TUBA", "The biggest brass instrument"], ["HARP", "A big instrument with many strings you pluck"], ["CHOIR", "A group of singers"], ["TEMPO", "How fast or slow music goes"], ["NOTE", "A single sound in music"], ["PLANET", "Earth is one of these"], ["STAR", "The Sun is one of these"], ["MOON", "It circles the Earth and lights up the night"], ["COMET", "An icy space traveler with a glowing tail"], ["ROCKET", "It blasts off into space"], ["ORBIT", "The path something takes around a planet or star"], ["GALAXY", "A huge group of stars, like the Milky Way"], ["JUPITER", "The biggest planet in our solar system"], ["MARS", "The red planet"], ["SATURN", "The planet with big, beautiful rings"], ["VENUS", "The hottest planet in our solar system"], ["MERCURY", "The planet closest to the Sun"], ["NEPTUNE", "The planet farthest from the Sun"], ["ASTEROID", "A rocky object that travels around the Sun"], ["GRAVITY", "The force that keeps your feet on the ground"], ["SPACE", "Everything beyond Earth's air"], ["TELESCOPE", "A tool for seeing faraway stars"], ["ALIEN", "A creature from another planet in stories"], ["CRATER", "A hole made when a space rock hits the ground"], ["ASTRONAUT", "A person who travels to space"], ["EARTH", "The planet we live on"], ["SUN", "The star at the center of our solar system"], ["OCTOPUS", "A sea animal with eight arms and three hearts"], ["WOMBAT", "An Australian animal that makes cube-shaped poop"], ["SLOTH", "A very slow animal that hangs in trees"], ["PENGUIN", "A bird that swims but cannot fly"], ["SHARK", "A fish with lots of sharp teeth"], ["WHALE", "A giant ocean animal that breathes air"], ["DOLPHIN", "A smart sea animal that clicks and whistles"], ["TIGER", "A big cat with orange and black stripes"], ["LION", "A big cat with a mane, called king of the jungle"], ["ZEBRA", "A horse-like animal with black and white stripes"], ["GIRAFFE", "The tallest animal in the world"], ["ELEPHANT", "The biggest land animal, with a long trunk"], ["MONKEY", "It swings in trees and loves bananas"], ["PANDA", "A black and white bear that eats bamboo"], ["KOALA", "An Australian animal that sleeps in eucalyptus trees"], ["KANGAROO", "It hops and carries its baby in a pouch"], ["FROG", "A green hopper that starts life as a tadpole"], ["TURTLE", "An animal with a shell on its back"], ["RABBIT", "An animal with long ears that hops"], ["OWL", "A bird that stays up at night and hoots"], ["PARROT", "A colorful bird that can copy words"], ["BEE", "An insect that makes honey"], ["BUTTERFLY", "It starts life as a caterpillar"], ["SPIDER", "It has eight legs and spins webs"], ["HORSE", "An animal you can ride that gallops"], ["GOAT", "A farm animal with horns that eats almost anything"], ["PIG", "A farm animal that oinks"], ["COW", "A farm animal that moos and gives milk"], ["DUCK", "A bird that quacks"], ["FOX", "A clever animal with a bushy tail"], ["BEAR", "A big furry animal that sleeps all winter"], ["CAMEL", "A desert animal with humps"], ["OTTER", "It floats on its back and holds hands while sleeping"], ["FLAMINGO", "A pink bird that stands on one leg"], ["ALLIGATOR", "A big reptile that lives in Florida swamps"], ["MANATEE", "A gentle sea cow that swims in warm water"], ["RAIN", "Water that falls from the clouds"], ["SNOW", "Frozen white flakes that fall in winter"], ["CLOUD", "A fluffy white thing floating in the sky"], ["THUNDER", "The loud boom you hear in a storm"], ["LIGHTNING", "A bright flash of electricity in a storm"], ["RAINBOW", "A colorful arc in the sky after the rain"], ["TORNADO", "A spinning funnel of wind"], ["HURRICANE", "A giant storm that forms over warm ocean water"], ["WIND", "Moving air"], ["OCEAN", "A huge body of salt water"], ["RIVER", "Long, flowing water that runs to the sea"], ["MOUNTAIN", "A very tall landform with a peak"], ["VOLCANO", "A mountain that can erupt with lava"], ["ISLAND", "Land with water all around it"], ["DESERT", "A very dry place, often with lots of sand"], ["FOREST", "A place with lots of trees together"], ["BEACH", "The sandy place next to the ocean"], ["TREE", "A tall plant with a trunk and branches"], ["FLOWER", "The colorful part of a plant"], ["SEED", "A plant grows from this"], ["PENCIL", "A writing tool with an eraser on top"], ["BOOK", "You read it, page by page"], ["TEACHER", "The person who helps you learn at school"], ["SCHOOL", "The place you go to learn"], ["LIBRARY", "A place where you can borrow books"], ["RECESS", "Playtime during the school day"], ["HOMEWORK", "Schoolwork you do at home"], ["CRAYON", "A colored wax stick for drawing"], ["PAPER", "You write and draw on it"], ["PILLOW", "A soft thing for your head at bedtime"], ["CROWN", "A queen or king wears it on their head"], ["QUEEN", "A royal lady who rules"], ["KING", "A royal man who rules"], ["CASTLE", "A big stone home for royalty"], ["NAP", "A short sleep during the day"], ["DREAM", "A story your brain tells while you sleep"], ["PIZZA", "Round food with cheese, cut into slices"], ["TACO", "A folded shell stuffed with filling"], ["CAKE", "A sweet dessert for birthdays"], ["COOKIE", "A sweet baked treat, maybe with chocolate chips"], ["APPLE", "A red or green fruit that grows on trees"], ["BANANA", "A yellow fruit that is really a berry"], ["HONEY", "Sweet, sticky food made by bees"], ["CHEESE", "Some fake news says the Moon is made of this"], ["COFFEE", "A hot drink that keeps grown-ups awake"], ["BICYCLE", "It has two wheels and pedals"], ["TRAIN", "It rides on tracks"], ["SHIP", "A very big boat"], ["TICKET", "A pass you need to ride or get in"], ["MONEY", "Coins and dollars"], ["COIN", "A round piece of metal money"], ["FRIEND", "Someone you like to spend time with"], ["FAMILY", "The people who love you and take care of you"], ["HOME", "The place where you live"], ["CITY", "A big town with lots of buildings"], ["VILLAGE", "A small town in the countryside"], ["MAP", "A drawing that shows where places are"], ["GLOBE", "A round map of the whole world"], ["CLOCK", "It tells you what time it is"], ["CALENDAR", "It shows the days and months of the year"], ["BIRTHDAY", "The day you were born, celebrated every year"], ["GAME", "Something you play to have fun"], ["PUZZLE", "A game you solve, like this one"], ["ROBOT", "A machine that can do jobs on its own"], ["COMPUTER", "A machine for typing, games, and the internet"], ["PHONE", "You use it to call people"], ["LETTER", "A written message you mail, or A, B, or C"], ["STAMP", "You stick it on a letter before you mail it"], ["SLOVENIA", "The country in Europe where Richard Powers was born"]];
+  function pick(n, filter){ var pool = BANK.filter(filter || function(){ return true; }), out = []; pool = pool.slice();
+    while (out.length < n && pool.length){ out.push(pool.splice(Math.floor(Math.random()*pool.length), 1)[0]); } return out; }
+
+  /* ---------- Word Search ---------- */
+  var N = 10;
+  function makeSearch(){
+    var dirs = [[0,1],[1,0],[1,1],[-1,1]];
+    for (var tries = 0; tries < 60; tries++){
+      var words = pick(10, function(b){ return b[0].length >= 3 && b[0].length <= N; }).map(function(b){ return b[0]; })
+        .sort(function(a,b){ return b.length - a.length; });
+      var g = [], ok = true, pos = {};
+      for (var r = 0; r < N; r++) g.push(new Array(N).fill(''));
+      for (var w = 0; w < words.length && ok; w++){
+        var word = words[w], placed = false;
+        for (var t = 0; t < 400 && !placed; t++){
+          var d = dirs[Math.floor(Math.random()*dirs.length)], r0 = Math.floor(Math.random()*N), c0 = Math.floor(Math.random()*N);
+          var re = r0 + d[0]*(word.length-1), ce = c0 + d[1]*(word.length-1);
+          if (re < 0 || re >= N || ce >= N) continue;
+          var fits = true;
+          for (var i = 0; i < word.length; i++){ var ch = g[r0+d[0]*i][c0+d[1]*i]; if (ch && ch !== word[i]) { fits = false; break; } }
+          if (!fits) continue;
+          for (i = 0; i < word.length; i++) g[r0+d[0]*i][c0+d[1]*i] = word[i];
+          pos[word] = [r0,c0,re,ce]; placed = true;
+        }
+        if (!placed) ok = false;
+      }
+      if (ok){ var L = 'ABCDEFGHIKLMNOPRSTUVWY'; for (r = 0; r < N; r++) for (var c = 0; c < N; c++) if (!g[r][c]) g[r][c] = L[Math.floor(Math.random()*L.length)];
+        return { g:g, pos:pos, words: words.slice().sort() }; }
+    }
+  }
+  function wordSearch(){
+    var p = makeSearch(), b = G.body(), found = {}, start = null;
+    b.innerHTML = '<div class="meta" id="ws-meta"></div><div class="ws"><div class="wsgrid" id="wsg" style="grid-template-columns:repeat(' + N + ',auto)"></div><div class="wside"><ul class="wlist" id="wsl"></ul><button class="btn ghost" id="ws-new">New puzzle</button></div></div>';
+    document.getElementById('ws-new').onclick = wordSearch;
+    var grid = document.getElementById('wsg'), list = document.getElementById('wsl'), cells = [];
+    p.words.forEach(function(w){ var li = el('li', null, w); li.id = 'ws-' + w; list.appendChild(li); });
+    for (var r = 0; r < N; r++) for (var c = 0; c < N; c++) (function(r, c){
+      var btn = el('button', null, p.g[r][c]); btn.setAttribute('aria-label', 'Row ' + (r+1) + ' column ' + (c+1) + ' ' + p.g[r][c]);
+      btn.onclick = function(){ tap(r, c); }; grid.appendChild(btn); cells.push(btn);
+    })(r, c);
+    function cell(r, c){ return cells[r*N + c]; }
+    function meta(){ var n = Object.keys(found).length; document.getElementById('ws-meta').textContent = n === p.words.length ? 'You found all ' + n + ' words!' : 'Found ' + n + ' of ' + p.words.length + ' · Tap the first letter, then the last letter'; }
+    function tap(r, c){
+      if (!start){ start = [r, c]; cell(r, c).classList.add('sel'); return; }
+      cell(start[0], start[1]).classList.remove('sel');
+      var s = start; start = null;
+      for (var w in p.pos){
+        if (found[w]) continue; var q = p.pos[w];
+        var hit = (q[0]===s[0]&&q[1]===s[1]&&q[2]===r&&q[3]===c) || (q[2]===s[0]&&q[3]===s[1]&&q[0]===r&&q[1]===c);
+        if (hit){
+          found[w] = true; var dr = Math.sign(q[2]-q[0]), dc = Math.sign(q[3]-q[1]), list = [];
+          for (var i = 0; i < w.length; i++){ var e = cell(q[0]+dr*i, q[1]+dc*i); e.classList.add('found'); list.push(e); }
+          sparkle(list);
+          document.getElementById('ws-' + w).classList.add('done'); meta();
+          return;
+        }
+      }
+      if (s[0] !== r || s[1] !== c){ start = [r, c]; cell(r, c).classList.add('sel'); }
+    }
+    meta();
+  }
+  document.getElementById('play-ws').onclick = function(){ G.open('GNS Word Search', this, true); wordSearch(); };
+
+  /* ---------- Sparkle effect ---------- */
+  var reduce = false; try { reduce = matchMedia('(prefers-reduced-motion: reduce)').matches; } catch(e){}
+  function sparkle(els){
+    els.forEach(function(e, i){
+      e.classList.remove('pop'); void e.offsetWidth; e.classList.add('pop');
+      if (reduce) return;
+      var host = e.parentNode.classList.contains('c') ? e.parentNode : e.parentNode;
+      setTimeout(function(){
+        for (var k = 0; k < 6; k++){
+          var s = el('span','spark'), a = Math.random()*Math.PI*2, dist = 22 + Math.random()*22;
+          s.style.setProperty('--dx', Math.cos(a)*dist + 'px'); s.style.setProperty('--dy', Math.sin(a)*dist + 'px');
+          if (host === e.parentNode && host.classList.contains('c')) host.appendChild(s);
+          else { var rect = e.getBoundingClientRect(), pr = e.offsetParent ? e.offsetParent.getBoundingClientRect() : rect;
+            s.style.left = (e.offsetLeft + e.offsetWidth/2) + 'px'; s.style.top = (e.offsetTop + e.offsetHeight/2) + 'px'; e.parentNode.appendChild(s); }
+          setTimeout(function(x){ return function(){ x.remove(); }; }(s), 800);
+        }
+      }, i * 60);
+    });
+  }
+
+  /* ---------- Crossword generator ---------- */
+  function buildCrossword(){
+    var best = null;
+    for (var attempt = 0; attempt < 80; attempt++){
+      var cand = pick(40, function(b){ return b[0].length >= 3 && b[0].length <= 9; });
+      cand.sort(function(a,b){ return b[0].length - a[0].length; });
+      var first = cand.shift(), g = {}, placed = [];
+      function put(w, r, c, d, clue){ for (var i = 0; i < w.length; i++){ var k = (d==='A'?r:r+i)+','+(d==='A'?c+i:c); if (!g[k]) g[k] = { ch:w[i], dirs:'' }; g[k].dirs += d; } placed.push({ w:w, r:r, c:c, d:d, clue:clue }); }
+      function fits(w, r, c, d){
+        var cross = 0;
+        for (var i = 0; i < w.length; i++){
+          var rr = d==='A'?r:r+i, cc = d==='A'?c+i:c, k = rr+','+cc;
+          if (g[k]){ if (g[k].ch !== w[i] || g[k].dirs.indexOf(d) >= 0) return false; cross++; }
+          else { var n1 = d==='A'?(rr-1)+','+cc:rr+','+(cc-1), n2 = d==='A'?(rr+1)+','+cc:rr+','+(cc+1); if (g[n1] || g[n2]) return false; }
+        }
+        var before = d==='A'?r+','+(c-1):(r-1)+','+c, after = d==='A'?r+','+(c+w.length):(r+w.length)+','+c;
+        if (g[before] || g[after]) return false;
+        return cross > 0;
+      }
+      function bounds(){ var rs = [], cs = []; for (var k in g){ var p = k.split(','); rs.push(+p[0]); cs.push(+p[1]); }
+        return { r0:Math.min.apply(0,rs), r1:Math.max.apply(0,rs), c0:Math.min.apply(0,cs), c1:Math.max.apply(0,cs) }; }
+      put(first[0], 0, 0, 'A', first[1]);
+      for (var ci = 0; ci < cand.length && placed.length < 9; ci++){
+        var w = cand[ci][0], opts = [];
+        placed.forEach(function(p){
+          for (var i = 0; i < p.w.length; i++) for (var j = 0; j < w.length; j++){
+            if (p.w[i] !== w[j]) continue;
+            var r, c, d; if (p.d === 'A'){ r = p.r - j; c = p.c + i; d = 'D'; } else { r = p.r + i; c = p.c - j; d = 'A'; }
+            if (fits(w, r, c, d)) opts.push([r, c, d]);
+          }
+        });
+        opts = opts.filter(function(o){ var bb = bounds(), len = w.length;
+          var r0 = Math.min(bb.r0, o[0]), c0 = Math.min(bb.c0, o[1]), r1 = Math.max(bb.r1, o[2]==='D'?o[0]+len-1:o[0]), c1 = Math.max(bb.c1, o[2]==='A'?o[1]+len-1:o[1]);
+          return r1 - r0 < 12 && c1 - c0 < 12; });
+        if (opts.length){ var o = opts[Math.floor(Math.random()*opts.length)]; put(w, o[0], o[1], o[2], cand[ci][1]); }
+      }
+      var bb = bounds(), area = (bb.r1-bb.r0+1)*(bb.c1-bb.c0+1);
+      var hasDown = placed.some(function(p){ return p.d === 'D'; });
+      var score = placed.length * 1000 - area;
+      if (hasDown && (!best || score > best.score)) best = { score:score, placed:placed, bb:bb };
+      if (best && best.placed.length >= 9 && attempt > 20) break;
+    }
+    var b0 = best.bb;
+    return { rows: b0.r1-b0.r0+1, cols: b0.c1-b0.c0+1, words: best.placed.map(function(p){ return { w:p.w, r:p.r-b0.r0, c:p.c-b0.c0, d:p.d, clue:p.clue }; }) };
+  }
+
+  function crossword(){
+    var CW = buildCrossword(), ans = {}, starts = {}, num = 0, b = G.body();
+    CW.words.forEach(function(x){ for (var i = 0; i < x.w.length; i++){ var r = x.d==='A'?x.r:x.r+i, c = x.d==='A'?x.c+i:x.c; ans[r+','+c] = x.w[i]; } });
+    var keys = CW.words.map(function(x){ return x.r+','+x.c; }).filter(function(k,i,a){ return a.indexOf(k)===i; })
+      .sort(function(a,b){ a=a.split(',').map(Number); b=b.split(',').map(Number); return a[0]-b[0] || a[1]-b[1]; });
+    keys.forEach(function(k){ starts[k] = ++num; });
+    CW.words.forEach(function(x){ x.n = starts[x.r+','+x.c]; x.cells = []; for (var i = 0; i < x.w.length; i++) x.cells.push((x.d==='A'?x.r:x.r+i)+','+(x.d==='A'?x.c+i:x.c)); });
+    b.innerHTML = '<div class="meta" id="cw-meta"></div><div class="cw"><div class="cwwrap"><div class="cwgrid" id="cwg" style="grid-template-columns:repeat(' + CW.cols + ',auto)"></div></div><div class="clues" id="cwc"></div></div><div class="row"><button class="btn" id="cw-check">Check answers</button><button class="btn ghost" id="cw-reveal">Show answers</button><button class="btn ghost" id="cw-new">New puzzle</button></div><div id="cw-msg"></div>';
+    document.getElementById('cw-new').onclick = crossword;
+    var grid = document.getElementById('cwg'), inputs = {}, dir = 'A', solved = {};
+    function meta(){ var n = Object.keys(solved).length; document.getElementById('cw-meta').textContent = n === CW.words.length ? 'All ' + n + ' words solved!' : n + ' of ' + CW.words.length + ' words solved'; }
+    function checkWords(){
+      CW.words.forEach(function(x){
+        var right = x.cells.every(function(k){ return inputs[k].value === ans[k]; }), key = x.n + x.d;
+        if (right && !solved[key]){ solved[key] = true; x.cells.forEach(function(k){ inputs[k].classList.add('solved'); }); sparkle(x.cells.map(function(k){ return inputs[k]; }));
+          var li = document.getElementById('clue-' + key); if (li) li.classList.add('done'); }
+        if (!right && solved[key]){ delete solved[key]; var li2 = document.getElementById('clue-' + key); if (li2) li2.classList.remove('done'); }
+      });
+      for (var k in inputs){ var still = CW.words.some(function(x){ return solved[x.n + x.d] && x.cells.indexOf(k) >= 0; }); if (!still) inputs[k].classList.remove('solved'); }
+      meta();
+      if (Object.keys(solved).length === CW.words.length){ var m = document.getElementById('cw-msg'); m.className = 'feedback good'; m.textContent = 'You solved the whole crossword! Great job, editor.'; }
+    }
+    for (var r = 0; r < CW.rows; r++) for (var c = 0; c < CW.cols; c++){
+      var k = r+','+c, cellEl = el('div','c' + (ans[k] ? ' on' : ''));
+      if (ans[k]){
+        if (starts[k]) cellEl.appendChild(el('span','n',starts[k]));
+        var inp = document.createElement('input'); inp.maxLength = 1; inp.id = 'cw-' + r + '-' + c; inp.autocomplete = 'off'; inp.setAttribute('autocapitalize','characters'); inp.setAttribute('aria-label','Row ' + (r+1) + ' column ' + (c+1));
+        (function(r, c, inp){
+          inp.addEventListener('focus', function(){ inp.select(); });
+          inp.addEventListener('click', function(){ if (inp.dataset.f) dir = dir === 'A' ? 'D' : 'A'; inp.dataset.f = 1; });
+          inp.addEventListener('blur', function(){ delete inp.dataset.f; });
+          inp.addEventListener('input', function(){
+            inp.value = inp.value.replace(/[^a-z]/ig,'').slice(-1).toUpperCase(); inp.classList.remove('bad');
+            checkWords();
+            if (!inp.value) return;
+            var nr = dir==='D'?r+1:r, nc = dir==='A'?c+1:c;
+            if (!inputs[nr+','+nc]){ var alt = dir==='A'?(r+1)+','+c:r+','+(c+1); if (inputs[alt]) { dir = dir==='A'?'D':'A'; nr = +alt.split(',')[0]; nc = +alt.split(',')[1]; } }
+            if (inputs[nr+','+nc]) inputs[nr+','+nc].focus();
+          });
+          inp.addEventListener('keydown', function(e){
+            var m = { ArrowRight:[0,1], ArrowLeft:[0,-1], ArrowDown:[1,0], ArrowUp:[-1,0] }[e.key];
+            if (m){ e.preventDefault(); dir = m[0] ? 'D' : 'A'; var t = inputs[(r+m[0])+','+(c+m[1])]; if (t) t.focus(); }
+            if (e.key === 'Backspace' && !inp.value){ var pr = dir==='A'?r+','+(c-1):(r-1)+','+c; if (inputs[pr]){ e.preventDefault(); inputs[pr].value=''; inputs[pr].focus(); checkWords(); } }
+          });
+        })(r, c, inp);
+        inputs[k] = inp; cellEl.appendChild(inp);
+      }
+      grid.appendChild(cellEl);
+    }
+    var clues = document.getElementById('cwc');
+    ['A','D'].forEach(function(d){
+      var list = CW.words.filter(function(x){ return x.d===d; }).sort(function(a,b){ return a.n-b.n; });
+      if (!list.length) return;
+      clues.appendChild(el('h4', null, d === 'A' ? 'Across' : 'Down'));
+      var ol = el('ol');
+      list.forEach(function(x){
+        var li = el('li'); li.id = 'clue-' + x.n + x.d; li.appendChild(el('b', null, x.n + '.')); li.appendChild(document.createTextNode(' ' + x.clue + ' (' + x.w.length + ')'));
+        li.style.cursor = 'pointer'; li.onclick = function(){ dir = d; inputs[x.r+','+x.c].focus(); };
+        ol.appendChild(li);
+      });
+      clues.appendChild(ol);
+    });
+    var msg = document.getElementById('cw-msg');
+    document.getElementById('cw-check').onclick = function(){
+      var wrong = 0, empty = 0;
+      for (var k in inputs){ var i = inputs[k]; i.classList.remove('bad');
+        if (!i.value) { empty++; continue; }
+        if (i.value !== ans[k]) { wrong++; i.classList.add('bad'); } }
+      if (Object.keys(solved).length === CW.words.length) return;
+      msg.className = 'feedback bad';
+      msg.textContent = wrong ? wrong + ' square(s) need fixing' + (empty ? ' and ' + empty + ' are still empty.' : '.') : 'Everything so far is right! ' + empty + ' square(s) still empty.';
+    };
+    document.getElementById('cw-reveal').onclick = function(){ for (var k in inputs){ inputs[k].value = ans[k]; inputs[k].classList.remove('bad'); } msg.className=''; msg.textContent=''; checkWords(); };
+    meta();
+  }
+  document.getElementById('play-cw').onclick = function(){ G.open('GNS Crossword', this, true); crossword(); };
+
+})();
+</script>
+
+<script>
+document.addEventListener('play',function(e){document.querySelectorAll('audio').forEach(function(a){if(a!==e.target)a.pause();});},true);
+try{document.getElementById('today').textContent=new Date().toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'})}catch(e){}
+</script>
+
+</body>
+</html>

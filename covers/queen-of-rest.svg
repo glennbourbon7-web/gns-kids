@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500">
+  <defs><linearGradient id="q" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f7a8cb"/><stop offset="1" stop-color="#a98ae6"/></linearGradient></defs>
+  <rect width="500" height="500" fill="url(#q)"/>
+  <g fill="#fff" opacity=".8"><circle cx="70" cy="70" r="5"/><circle cx="440" cy="90" r="6"/><circle cx="410" cy="200" r="4"/><circle cx="60" cy="230" r="4"/></g>
+  <g transform="translate(0,-22)">
+  <!-- cloud -->
+  <path d="M30 420 Q20 360 85 360 Q100 315 160 330 Q200 290 260 320 Q310 290 350 330 Q420 315 430 365 Q490 365 475 420Z" fill="#fff" stroke="#3a2154" stroke-width="7" stroke-linejoin="round"/>
+  <!-- pillow -->
+  <path d="M110 230 Q100 180 140 175 Q250 160 360 175 Q400 180 390 230 Q380 280 390 330 Q400 370 360 368 Q250 380 140 368 Q100 370 110 330 Q120 280 110 230Z" fill="#fff4fb" stroke="#3a2154" stroke-width="8" stroke-linejoin="round"/>
+  <!-- crown -->
+  <path d="M175 180 L160 105 L210 140 L250 85 L290 140 L340 105 L325 180Z" fill="#ffcf33" stroke="#3a2154" stroke-width="8" stroke-linejoin="round"/>
+  <circle cx="250" cy="150" r="11" fill="#e8463c" stroke="#3a2154" stroke-width="4"/>
+  <circle cx="200" cy="162" r="8" fill="#5ec8ff" stroke="#3a2154" stroke-width="4"/>
+  <circle cx="300" cy="162" r="8" fill="#5ec8ff" stroke="#3a2154" stroke-width="4"/>
+  <!-- sleepy face -->
+  <path d="M190 262 Q210 280 230 262 M270 262 Q290 280 310 262" fill="none" stroke="#3a2154" stroke-width="7" stroke-linecap="round"/>
+  <circle cx="180" cy="295" r="16" fill="#ffb3cf"/><circle cx="320" cy="295" r="16" fill="#ffb3cf"/>
+  <path d="M232 305 Q250 320 268 305" fill="none" stroke="#3a2154" stroke-width="6" stroke-linecap="round"/>
+  <!-- Zzz -->
+  <g font-family="Arial Black, Impact, sans-serif" font-weight="900" fill="#fff" stroke="#3a2154" stroke-width="3" paint-order="stroke">
+    <text x="365" y="150" font-size="44">Z</text><text x="405" y="110" font-size="34">z</text><text x="435" y="78" font-size="26">z</text>
+  </g>
+  </g>
+  <!-- title -->
+  <text x="250" y="455" font-family="Arial Black, Impact, sans-serif" font-weight="900" font-size="46" text-anchor="middle" fill="#3a2154">QUEEN OF REST</text>
+  <text x="250" y="485" font-family="Arial, sans-serif" font-weight="700" font-size="19" text-anchor="middle" fill="#fff">JULIE APPLESEED</text>
+</svg>
