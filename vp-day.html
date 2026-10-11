@@ -1,0 +1,587 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><link rel="icon" href="favicon-32.png"></head><body>
+<title>The Day in the Life of Glenn Bourbon</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@400;600;700;800&display=swap">
+<style>
+/* Layout: GNS Kids red masthead, a cartoon stage (16:10), a HUD strip, and a decision card under the stage. One committed light cartoon look. */
+:root{
+  --red:#930000; --red2:#b31212; --ink:#24150f; --paper:#fff8f2; --card:#ffffff;
+  --line:#efdcd2; --muted:#7a625a; --gold:#c9a24a; --navy:#1d2a4a;
+  --good:#16602d; --goodbg:#e3f4e8; --ok:#6d4b00; --okbg:#fff0cf; --bad:#8c1414; --badbg:#fde3e0;
+  --display:"Fredoka","Trebuchet MS",system-ui,sans-serif; --body:"Nunito","Segoe UI",system-ui,sans-serif;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+html,body{background:var(--paper);color:var(--ink)}
+body{font-family:var(--body);font-size:16px;line-height:1.5}
+.wrap{max-width:900px;margin:0 auto;padding-inline:16px;padding-block:14px 40px;display:grid;gap:14px}
+.mast{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.badge{font-family:var(--display);font-weight:700;background:var(--red);color:#fff;border-radius:999px;padding:6px 14px;font-size:.95rem;letter-spacing:.02em}
+.mast h1{font-family:var(--display);font-weight:700;font-size:clamp(1.35rem,3.6vw,2rem);line-height:1.1;margin:0;text-wrap:balance;flex:1;min-width:0}
+.tag{font-family:var(--display);font-weight:600;font-size:.8rem;letter-spacing:.08em;text-transform:uppercase;border:2px solid var(--ink);border-radius:8px;padding:2px 8px}
+.hud{display:flex;gap:10px 16px;align-items:center;flex-wrap:wrap;font-family:var(--display);font-weight:600}
+.chip{background:var(--card);border:2px solid var(--line);border-radius:999px;padding:4px 12px;white-space:nowrap}
+.clock{font-variant-numeric:tabular-nums}
+.meter{display:flex;align-items:center;gap:8px;margin-left:auto;min-width:0}
+.meter .bar{width:140px;max-width:34vw;height:12px;border-radius:99px;background:var(--line);overflow:hidden}
+.meter .bar i{display:block;height:100%;background:var(--red2);transition:width .5s}
+.meter b{font-variant-numeric:tabular-nums;min-width:3.2ch;text-align:right}
+.stage{position:relative;border-radius:18px;overflow:hidden;border:3px solid var(--ink);background:#000;box-shadow:0 6px 0 rgba(36,21,15,.18)}
+.stage svg{display:block;width:100%;height:auto;aspect-ratio:8/5;max-width:100%}
+#glennPos{transform-box:view-box;transform-origin:0 0}
+.walking .leg{animation:step .45s ease-in-out infinite alternate;transform-box:fill-box;transform-origin:50% 0}
+.walking .leg-r{animation-direction:alternate-reverse}
+.walking .g-bob{animation:bob .45s ease-in-out infinite alternate}
+.idle .g-bob{animation:breathe 2.6s ease-in-out infinite alternate}
+@keyframes step{from{transform:rotate(-11deg)}to{transform:rotate(11deg)}}
+@keyframes bob{from{transform:translateY(0)}to{transform:translateY(-3px)}}
+@keyframes breathe{from{transform:translateY(0)}to{transform:translateY(-1.5px)}}
+.hand{transition:transform .6s ease-in-out}
+.mini-phone{opacity:0;transition:opacity .3s}
+.phone-pose .hand-r{transform:translate(-16px,-62px)}
+.phone-pose .mini-phone{opacity:1}
+.buckle .hand-l{transform:translate(40px,-6px)}
+.buckle .hand-r{transform:translate(-40px,-6px)}
+.belt-off{display:none}
+.unbuckled .belt-off{display:inline}
+.unbuckled .belt-on{display:none}
+.suv{animation:drive 5s linear forwards}
+@keyframes drive{from{transform:translateX(-520px)}to{transform:translateX(980px)}}
+.fade{position:absolute;inset:0;background:#000;opacity:0;pointer-events:none;transition:opacity .7s}
+.fade.on{opacity:1}
+.card-ov{position:absolute;inset:0;display:grid;place-items:center;text-align:center;padding:16px;background:#050505;color:#fff}
+.card-ov p{margin:0;font-family:var(--display);font-weight:700;font-size:clamp(1.6rem,6vw,3.4rem);letter-spacing:.02em}
+.card-ov.title p{font-size:clamp(1.3rem,4.5vw,2.4rem);max-width:22ch}
+.phone{position:absolute;right:7%;top:50%;transform:translateY(-50%);width:clamp(110px,24%,190px);aspect-ratio:9/18;border-radius:22px;background:#111;padding:7px;box-shadow:0 10px 30px rgba(0,0,0,.5)}
+.ph{height:100%;border-radius:16px;background:linear-gradient(170deg,#c43a3a,#5c0000 70%);color:#fff;display:flex;flex-direction:column;align-items:center;padding-top:22%;gap:2px;text-align:center}
+.ph .t{font-family:var(--display);font-weight:600;font-size:clamp(1.6rem,5vw,2.6rem);line-height:1;font-variant-numeric:tabular-nums}
+.ph .d{font-size:clamp(.6rem,1.6vw,.8rem);font-weight:700;opacity:.9}
+.ph .n{margin-top:auto;margin-bottom:16%;font-size:clamp(.55rem,1.5vw,.75rem);font-weight:700;opacity:.75}
+.panel{background:var(--card);border:2px solid var(--line);border-radius:18px;padding:18px 20px;display:grid;gap:12px;min-height:140px}
+.panel .eyebrow{font-family:var(--display);font-weight:600;font-size:.8rem;letter-spacing:.09em;text-transform:uppercase;color:var(--red2)}
+.panel h2{font-family:var(--display);font-weight:700;font-size:clamp(1.3rem,3.4vw,1.7rem);line-height:1.15;margin:0;text-wrap:balance}
+.panel p{margin:0;max-width:66ch}
+.choices{display:grid;gap:10px}
+.choice{font:inherit;font-weight:700;text-align:left;border:2px solid var(--line);background:var(--paper);color:var(--ink);border-radius:14px;padding:12px 16px;cursor:pointer}
+.choice:hover{border-color:var(--red2)}
+.choice[disabled]{cursor:default;opacity:.55}
+.choice.picked{opacity:1;border-color:var(--ink)}
+.btn{font-family:var(--display);font-weight:600;font-size:1.05rem;border:0;border-radius:999px;padding:11px 24px;cursor:pointer;background:var(--red2);color:#fff;justify-self:start;text-decoration:none;display:inline-block}
+.btn:hover{filter:brightness(1.08)}
+.btn.ghost{background:var(--line);color:var(--ink)}
+.btn:focus-visible,.choice:focus-visible{outline:3px solid var(--ink);outline-offset:3px}
+.fb{border-radius:14px;padding:12px 16px;display:grid;gap:4px}
+.fb b{font-family:var(--display);font-weight:700;font-size:1.05rem}
+.fb.g{background:var(--goodbg);color:var(--good)} .fb.o{background:var(--okbg);color:var(--ok)} .fb.p{background:var(--badbg);color:var(--bad)}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.end-title{font-family:var(--display);font-weight:700;font-size:clamp(2.4rem,9vw,4rem);line-height:1;margin:0}
+.stats{display:flex;gap:8px;flex-wrap:wrap}
+.stats span{background:var(--paper);border:2px solid var(--line);border-radius:10px;padding:4px 10px;font-weight:700;font-variant-numeric:tabular-nums}
+.gate{position:fixed;inset:0;z-index:20;background:rgba(20,8,6,.82);display:grid;place-items:center;padding:16px}
+.gate .box{background:var(--card);border-radius:20px;max-width:480px;width:100%;padding:24px;display:grid;gap:12px}
+.gate h2{font-family:var(--display);font-weight:700;margin:0;font-size:1.6rem}
+.gate p{margin:0}
+.foot{color:var(--muted);font-size:.85rem;margin:0}
+@media (prefers-reduced-motion:reduce){.walking .leg,.walking .g-bob,.idle .g-bob{animation:none}.hand,.fade,.meter .bar i{transition:none}}
+</style>
+
+<div class="gate" id="gate" hidden>
+  <div class="box" role="dialog" aria-labelledby="gateH">
+    <h2 id="gateH">Grown-Up Edition</h2>
+    <p>This version of the game ends with a grown-up joke. It's meant for adults. Grown-up supervision is advised.</p>
+    <div class="row">
+      <button class="btn" id="gateGo">I'm a grown-up. Continue</button>
+      <a class="btn ghost" href="https://glennbourbon7-web.github.io/gns-kids/vp-day.html">Play the kids version</a>
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+  <header class="mast">
+    <span class="badge">GNS Kids</span>
+    <h1>The Day in the Life of Glenn Bourbon</h1>
+    <span class="tag" id="edTag" hidden>Grown-Up Edition</span>
+  </header>
+  <div class="hud">
+    <span class="chip" id="where">The Vice President's Office</span>
+    <span class="chip clock" id="clock">8:00 AM</span>
+    <span class="meter"><span>Approval</span><span class="bar"><i id="bar" style="width:60%"></i></span><b id="appr">60%</b></span>
+  </div>
+  <div class="stage" id="stage">
+    <svg id="sv" viewBox="0 0 800 500" role="img" aria-label="Cartoon scene">
+      <g id="bg"></g>
+      <g id="glennPos"><g id="gl" class="idle"><g class="g-bob" id="glInner"></g></g></g>
+      <g id="fg"></g>
+    </svg>
+    <div class="fade" id="fade"></div>
+    <div class="card-ov" id="card" hidden><p id="cardText"></p></div>
+    <div class="phone" id="phone" hidden><div class="ph"><span class="d">GNS</span><span class="t" id="phTime">9:47</span><span class="d">Vice President's phone</span><span class="n">No notifications</span></div></div>
+  </div>
+  <section class="panel" id="panel" aria-live="polite"></section>
+  <p class="foot">There are 100 different problems in this game. Each day you play, Glenn gets a new mix of them.</p>
+</div>
+
+<script>
+// [title, setup, best choice, okay choice, poor choice, lesson]
+var OFFICE = [
+["Tie in the Senate","The Senate vote on a bill to fix potholes on highways is tied 50 to 50. The Vice President gets to break ties.","Go to the Capitol and cast the tie-breaking vote","Ask the senators to talk for one more hour first","Flip a coin to decide","The Constitution makes the Vice President the President of the Senate, and the VP votes only to break a tie."],
+["The Morning Briefing","Your briefing book is 60 pages long, and your first meeting starts in 30 minutes.","Read the summary and mark questions for your team","Read only the first page","Use it as a placemat for breakfast","Good leaders read the key facts first and ask about what they don't understand."],
+["A Stack of Letters","A third-grade class mailed you 30 letters asking, \"What does a Vice President do all day?\"","Write a short reply to every student","Send the whole class one form letter","Put the letters in a drawer and forget them","Answering kids' questions helps them learn how their government works."],
+["Early Guest","The Prime Minister of Iceland shows up 20 minutes early, and you still have donut sugar on your tie.","Brush it off, smile, and welcome her in","Ask her to wait in the hallway","Hide behind the curtains","Being warm with visitors builds friendships between countries."],
+["Coffee Trouble","Your staff is arguing about whose turn it is to refill the coffee pot.","Make a fair sign-up chart for everyone","Tell them to figure it out themselves","Ban coffee from the office forever","A simple, fair system stops small arguments from becoming big ones."],
+["The Desk Drawer","You open a desk drawer and find signatures from past Vice Presidents written inside.","Sign your name neatly to join the tradition","Close the drawer and leave it alone","Draw mustaches on the old signatures","Traditions like this connect today's leaders with the ones who came before."],
+["Storm Coming","A hurricane is heading toward the Gulf Coast.","Call the governor and offer federal help","Wait to see if the President calls first","Pose for a selfie in front of a weather map","When disaster is coming, quick teamwork between the states and the national government saves lives."],
+["Tough Question","A reporter asks why your office sent out a press release with the wrong date on it.","Admit the mistake and explain how you'll fix it","Say \"No comment\"","Blame the office cat","Owning up to mistakes earns people's trust."],
+["Running the Meeting","The President is overseas, so you have to lead today's Cabinet meeting.","Start on time with a clear agenda","Let everyone talk about anything for four hours","Cancel the meeting and take a nap","A clear plan keeps meetings short and useful."],
+["Juice Spill","An intern spills grape juice all over an important copy of a trade agreement.","Stay calm and ask for a fresh copy","Sigh loudly and grumble","Hang it on the wall and call it modern art","Mistakes happen. Staying calm helps everyone fix them faster."],
+["Science Fair Champs","The national science fair winners are visiting your office.","Ask each student to explain their project","Take one quick photo and leave","Give a long speech about yourself","Leaders learn a lot by listening, especially to young scientists."],
+["Cracked Tile","One of the historic tiles on your office floor has a crack.","Call the historic preservation experts","Put a rug over it","Fix it with chewing gum","Historic buildings need special care so future visitors can enjoy them."],
+["Not Speaking","Two senators from different parties have stopped speaking to each other.","Invite them both to lunch together","Talk to each of them separately","Pick the one you like better","Bringing people together to talk is one of the most useful things a leader can do."],
+["Bridge Closed","A small-town mayor calls. The only bridge into town is closed for repairs.","Have your team check what help the town can get","Promise a brand-new bridge by Friday","Tell the mayor to try a rowboat","Leaders should only promise what they can actually deliver."],
+["Big Words","Your speech draft is full of giant words nobody understands.","Rewrite it in plain, clear words","Explain each hard word as you go","Add even bigger words","The best speeches use words everyone can understand."],
+["Fire Drill","The fire alarm goes off in the middle of your meeting.","Help everyone outside calmly and quickly","Finish your sentence first","Ignore it because it's probably a drill","Always take alarms seriously and walk out calmly. Drills keep us ready."],
+["Double-Booked","You need to swear in a new ambassador, but the ceremony room is booked for a staff birthday party.","Hold the ceremony in your office instead","Make the birthday party move","Do it in the parking lot","Being flexible solves scheduling problems without letting anyone down."],
+["Forgotten Passcode","You forgot the passcode to your secure work phone.","Call the security tech team for help","Deal with it after lunch","Write the new passcode on a sticky note on the phone","Never write passwords where other people can find them."],
+["Kid Reporter","A reporter from GNS Kids asks for a five-minute interview.","Say yes and answer honestly","Say maybe next year","Sneak out the back door","Talking to young reporters helps kids understand the news."],
+["Fancy Stapler","Someone wants to buy a solid-gold stapler for your office.","Say no and keep the regular stapler","Get a silver one instead","Order two gold staplers","Government money comes from taxpayers, so it should be spent wisely."],
+["Cheese Sculpture","A visiting leader gives you a six-foot cheese sculpture of your own face.","Thank them and turn it in to the official gift office","Keep it in your closet","Eat it for lunch","Big gifts from foreign leaders belong to the American people, not to the official who receives them."],
+["Birthday Card","It's your scheduler's birthday today.","Sign the card and lead everyone in singing","Sign the card later","Forget all about it","Small kindnesses make a team happier."],
+["Long Speech","You're running the Senate, and one senator has been talking for three hours.","Keep order and follow the Senate rules","Bang your gavel and shout \"Enough!\"","Fall asleep in the big chair","Fair rules protect everyone's right to speak, even when it takes a while."],
+["Noisy Jets","A family writes that jets from a nearby air base rattle their windows.","Write back and pass the letter to the right agency","Send them a pair of earmuffs","Throw the letter away","Every citizen deserves an answer, and the right agency can actually help."],
+["Vote Reminder","Election Day is next week.","Remind everyone to vote, no matter who they choose","Remind only the people who agree with you","Say voting doesn't matter","Voting is how citizens choose their leaders, and every vote counts."],
+["Tornado Town","A tornado damaged a small farming town.","Visit and listen to the families","Send a video message","Send a balloon bouquet","Showing up and listening helps leaders understand what people really need."],
+["No Translator","Your translator is stuck in traffic, and the delegation from Japan has arrived.","Wait and arrange another translator","Try charades for a while","Speak English very loudly and slowly","Clear communication matters in diplomacy, so it's worth getting a real translator."],
+["Frozen Teleprompter","Your teleprompter freezes in the middle of a speech.","Keep going with your paper notes","Read the error message out loud","Stand silently until it's fixed","Backup notes save the day."],
+["A Favor","An old friend asks you to make sure their company wins a government contract.","Say contracts follow fair rules for everyone","Change the subject","Say \"Sure thing, buddy!\"","Government contracts have to be fair, so friends can't get special treatment."],
+["Band Request","The Marine Band asks what song to play at today's ceremony.","Ask for a classic patriotic march","Let them pick anything","Request a polka remix of the national anthem","The Marine Band has played for presidents since 1801."],
+["Lost Dog","A friendly dog wanders into your office building.","Ask security to help find its owner","Keep it in your office for the day","Name it Secretary of Treats","Lost pets belong back with their families."],
+["Dentist or NASA?","Your dentist checkup is at the same time as a call with NASA.","Move the dentist appointment","Take the NASA call from the dentist's chair","Skip both","Sort your schedule by what matters most, and reschedule the rest."],
+["Moment of Silence","A giant sneeze is coming during a moment of silence.","Sneeze quietly into your elbow","Hold it in until your eyes water","Sneeze as loudly as you can","Covering a sneeze is polite and keeps germs from spreading."],
+["Rushed Bill","A senator wants to pass a 900-page bill that nobody has read yet.","Say lawmakers should read it before voting","Read just the title","Vote without looking","Lawmakers should understand a law before they vote on it."],
+["Lights Out","The power goes out in your office building.","Open the curtains and work by daylight","Go home for the day","Sit in the dark and complain","A little problem-solving keeps the work going."],
+["Space Call","Astronauts on the International Space Station call to say hello.","Ask what they're learning up there","Ask if they can see your house","Hang up because it's long distance","Space science teaches us things we can't learn on Earth."],
+["Portrait Time","The artist painting your official portrait wants you to sit still for six hours.","Plan a few shorter sessions","Sit for six hours without moving","Send a cardboard cutout instead","Breaking a big job into smaller pieces makes it easier."],
+["A Veteran Visits","A Navy veteran comes to visit your office.","Listen to their story and thank them","Shake hands and rush off","Talk only about yourself","Thanking veterans honors their service to the country."],
+["Wrong Capital","You said the capital of Kentucky is Louisville. It's actually Frankfort.","Correct yourself with a smile","Say Louisville sounds better anyway","Insist you were right","Correcting mistakes honestly shows good character."],
+["Nurses' Ceremony","You're invited to honor nursing students who won scholarships.","Go and congratulate each student","Send a short note","Forget to reply","Nurses take care of millions of people every day."],
+["Honest Advice","The President asks what you think of a plan you believe has a big problem.","Respectfully explain the problem and suggest a fix","Say nothing","Say \"Great idea!\"","Good advisers tell the truth, even when it's hard to hear."],
+["Mountain of Mail","Your office got 10,000 letters this week.","Set up a system so every letter gets read","Read only the ones with nice stamps","Build a fort out of them","Every letter is a person who wants to be heard."],
+["Shy Visitor","An exchange student from Brazil is too nervous to say hello.","Greet them with \"Olá!\" and a smile","Wave from across the room","Ignore them","Learning one word of someone's language makes them feel welcome."],
+["Mouse!","A tiny mouse runs across your office floor.","Ask the building crew to catch it safely","Climb on a chair and wait","Chase it with a broom while yelling","Calm, safe solutions work better than panic."],
+["Future VP","A child asks, \"Can I be Vice President someday?\"","Explain the rules and tell them to keep learning","Say \"Only if you beat me at checkers\"","Say \"No\"","A Vice President must be at least 35, a natural-born citizen, and have lived in the U.S. for 14 years."],
+["Budget Deadline","Congress has to agree on a budget by midnight.","Bring both sides together to find a compromise","Hope it works out","Leave for vacation","Compromise means each side gives a little so the country keeps running."],
+["Snow Day","A big snowstorm hits Washington, and the roads are icy.","Let staff work from home where it's safe","Tell everyone to come in anyway","Skip work and build a snow VP","Keeping your team safe comes first."],
+["Torn Sleeve","Your jacket sleeve rips right before a photo with the King of Norway.","Ask for a sewing kit and fix it fast","Hide your arm behind your back","Rip the other sleeve to match","A sewing kit and a calm head fix most wardrobe emergencies."],
+["Thank-You Notes","A town you helped after a flood sent a giant box of thank-you notes.","Read some aloud to your staff","Skim a few","Recycle them unopened","Sharing thanks reminds a team why their work matters."],
+["History Tour","A historian wants to see your office for a new book.","Give a tour and share the room's history","Have a staffer show them around","Say the office is closed forever","Historic rooms in Washington belong to the American people."]
+];
+
+var RESIDENCE = [
+["The Master Clock","Scientists at the Naval Observatory invite you to see the Master Clock, which keeps precise time for the country.","Visit and ask how it works","Ask them to set it five minutes fast so you're never late","Unplug it to see what happens","The Naval Observatory's clocks help keep time for GPS, so phones and maps know where you are."],
+["Ball Over the Fence","A neighbor kid's soccer ball bounces over the residence fence.","Ask the Secret Service to toss it back","Leave it there","Keep it for yourself","Being a good neighbor matters, even for a Vice President."],
+["Dinner Menu","The chef asks what to serve the ambassadors coming to dinner.","Check the guests' allergies and favorites first","Serve whatever is in the fridge","Put peanuts in everything","Good hosts plan around their guests so everyone can enjoy the meal."],
+["Squirrel Raid","Squirrels keep eating the tomatoes in the residence garden.","Put a net over the plants","Let them have the tomatoes","Declare war on squirrels","Gentle fixes protect both the garden and the animals."],
+["Jogging Rules","The Secret Service says you can't jog outside the gates today.","Jog laps around the grounds instead","Complain all afternoon","Sneak out the back gate","The Secret Service keeps the Vice President safe, so listening to them matters."],
+["Leaky Turret","Rain is dripping into the round turret room.","Call the repair crew right away","Put a bucket under it for a month","Ignore it","Small leaks turn into big problems if you wait."],
+["Sailors' Holiday","The Navy sailors who help at the residence have a holiday coming.","Thank them and make sure they get the day off","Forget to say anything","Ask them to work extra that day","The residence sits on a Navy base, and sailors work hard there."],
+["Halloween Night","Trick-or-treaters are lining up at the residence gate.","Hand out candy in a costume","Hand out toothbrushes","Turn off the lights and hide","Vice Presidents have welcomed trick-or-treaters at the Naval Observatory."],
+["Muddy Dog","Your dog dug up the flower bed an hour before a garden party.","Replant what you can and laugh it off","Hide the hole under a lawn chair","Blame the squirrels","Laughing off small accidents keeps a party fun."],
+["Bored Guest","An ambassador's 8-year-old is bored at a long dinner.","Show them the telescope and the stars","Hand them your phone for an hour","Tell them to sit still and be quiet","Making young guests feel welcome makes the whole visit better."],
+["Blackout Party","The lights go out in the middle of a reception.","Light candles and keep the party going","Send everyone home","Panic and run around","Staying calm turns a problem into a story people remember fondly."],
+["Ghost Rumor","A staffer says the old house is haunted because something keeps banging at night.","Investigate with a flashlight and find the loose shutter","Sleep with the lights on","Call a ghost-hunting TV show","Most mysteries have a simple explanation if you look carefully."],
+["Chef Out Sick","The chef is sick, and twelve guests arrive in two hours.","Order from a local restaurant and help set the table","Microwave frozen pizzas","Cancel without telling anyone","A good backup plan keeps an event on track."],
+["Story Time","The local library asks you to read to kids on Saturday.","Say yes and bring a favorite book","Send a recording instead","Say you're too busy","Reading with kids shows them that reading matters."],
+["Smoky Fireplace","You light the parlor fireplace, and smoke fills the room.","Open the chimney flue and the windows","Fan the smoke with a newspaper","Add more logs","A closed flue traps smoke inside. Always check it first."],
+["Tree Planting","A Girl Scout troop wants to plant a tree on the grounds.","Grab a shovel and plant it with them","Watch from the porch","Say trees are too messy","A tree planted today gives shade for a hundred years."],
+["Bird Nest","Birds built a nest inside the porch light.","Leave it until the chicks can fly and use a lamp","Move the nest to a bush","Knock it down","Many wild birds and their nests are protected by law."],
+["Strange Dish","An ambassador brings a dish from home you've never tried.","Try it politely and ask about it","Take a tiny bite","Say \"Ew\"","Trying new foods is a way to show respect for other cultures."],
+["Rainy Party","It starts pouring during a garden party.","Move everyone onto the covered porch","Hand out umbrellas and stay on the lawn","Let everyone get soaked","Good hosts change plans to keep guests comfortable."],
+["Practice or Play?","You need to practice tomorrow's speech, but friends want a board-game night.","Practice for an hour, then play","Play all night and wing the speech","Skip both and watch TV","Balancing work and fun keeps you sharp and happy."],
+["Comet Night","A rare comet will be visible tonight.","Invite a local school for a supervised star party","Watch it alone","Say comets are boring","The Naval Observatory has studied the sky since the 1800s."],
+["Grill Flare-Up","Grease on the grill catches fire!","Close the lid, step back, and get help","Blow on it","Throw water on it","Never put water on a grease fire. Cut off its air instead."],
+["Cupcake Mix-Up","The bakery delivers 400 cupcakes instead of 40.","Share them with the sailors, staff, and a shelter","Freeze them for later","Eat as many as you can","Sharing extra food helps others."],
+["Crooked Portrait","A historic painting in the hallway is hanging crooked.","Ask the curator to straighten it safely","Nudge it with a broom handle","Leave it crooked","Old paintings are delicate and need expert hands."],
+["Visiting Family","A sailor's family flew in all the way from Guam.","Invite them for a tour of the residence","Wave hello from the window","Say you're too busy","Small kindnesses mean a lot to military families far from home."],
+["Tangled Lights","The holiday lights for the porch are one giant tangle.","Untangle them patiently with your team","Buy brand-new lights","Throw the whole tangle on the roof","Patience and teamwork beat frustration."],
+["Siren Complaint","Neighbors say the motorcade sirens wake them up at night.","Ask the team to keep sirens off when it's safe","Tell neighbors to buy earplugs","Make the sirens louder","Listening to neighbors builds goodwill."],
+["Code Name","The Secret Service asks you to pick a code name.","Pick \"Lighthouse\"","Pick \"Big Ole' Red Cookie\"","Pick your computer password","Code names are a Secret Service tradition. Never share a real password."],
+["Camera Crew","A TV crew asks to film inside your bedroom.","Politely say no and offer a tour of the public rooms","Let them film everything","Slam the door","Even public officials deserve some privacy at home."],
+["Raccoon Raid","Raccoons knocked over the trash cans again.","Get locking lids and call wildlife experts","Clean up and hope","Leave out snacks for them","Locking lids keep wild animals safe and the yard clean."],
+["Moon Rock","An astronaut brings a real moon rock to show you.","Look closely with gloves on, the way experts do","Hold it in your bare hand","Try to keep it","Moon rocks are rare treasures brought back by the Apollo missions."],
+["Hospital Fundraiser","A children's hospital asks to hold a fundraiser on the lawn.","Host it and help raise money","Send a donation","Say the lawn is too nice to use","Using your position to help others is part of public service."],
+["Broken Mower","The lawn mower breaks the morning of a big event.","Borrow one from the grounds crew","Leave the grass long","Trim the lawn with scissors","Asking for help is often the fastest fix."],
+["After the Dinner","Last night's dinner guests have gone home.","Write each guest a handwritten thank-you note","Send one group text","Forget to thank them","Thank-you notes show people you appreciated them."],
+["Neon Idea","A decorator suggests painting the white residence neon green.","Keep the historic white paint","Paint just the porch green","Go neon green with purple polka dots","Historic houses keep their look so they can keep telling their story."],
+["Missing Glasses","You can't find your reading glasses before speech practice.","Retrace your steps calmly","Squint at the words","Cancel practice","Staying calm makes lost things easier to find. (They were on your head!)"],
+["Autograph Line","Kids at the gate ask for your autograph.","Sign for everyone and say hi","Sign for just one kid","Walk past without looking","A few minutes of your time can make someone's whole day."],
+["Bake Sale","The base is holding a bake sale for Navy families.","Bake a Big Ole' Red Cookie","Buy store cookies","Skip it","Volunteering supports the people who serve the country."],
+["Dome Open","A thunderstorm is coming, and the telescope dome is open.","Ask the astronomers to close the dome","Watch the lightning through it","Climb up and close it yourself in the storm","Let trained people handle dangerous jobs, and stay safe in storms."],
+["Porch Visit","A governor from the other party asks to meet.","Invite them to the porch for lemonade","Meet for five minutes in the hall","Say you only meet with your own party","Leaders from different parties can still work together."],
+["Sunset Photo","GNS wants a photo of you on the porch at sunset.","Stand tall and smile","Ask them to come back tomorrow","Make a goofy face","Photos of leaders become part of history."],
+["Forgot a Birthday","You forgot your best friend's birthday yesterday.","Call to say sorry and send a card","Send a quick text","Pretend you didn't forget","A real apology fixes more than an excuse."],
+["Sauce Showdown","At your picnic, two senators argue over whose barbecue sauce is best.","Hold a blind taste test","Pick one without tasting","Secretly mix them together","A fair test settles an argument better than picking sides."],
+["Half-Staff","An order arrives to fly the flag at half-staff to honor someone who died.","Make sure the flag is lowered properly","Lower it tomorrow","Forget about it","Flying the flag at half-staff is a sign of respect and mourning."],
+["Open Gate","You notice a side gate left wide open.","Tell the Secret Service right away","Close it and tell no one","Leave it open for fresh air","Reporting safety problems right away keeps everyone safe."],
+["Doctor's Orders","Your doctor says you should walk more each day.","Take a daily walk around the grounds","Walk to the fridge more often","Ride a golf cart everywhere","Daily walks keep your body and mind healthy."],
+["Wobbly Tree","A big oak tree near the house is leaning after a storm.","Call a tree expert to check it","Tie it up with string","Climb it to test it","Experts can tell whether a tree is safe or needs care."],
+["Pumpkin Contest","The staff is holding a pumpkin-carving contest.","Carve the GNS logo","Carve a simple smiley face","Smash your pumpkin when you lose","Being a good sport is more fun than winning."],
+["Tomorrow's Folder","Your briefing folder for tomorrow arrives right before bedtime.","Read the key parts, then get some sleep","Stay up all night reading every page","Use it as a coaster","Rest helps leaders make better decisions."],
+["Lemonade Stand","Kids on the base set up a lemonade stand near the gate.","Buy a cup and pay a little extra","Ask for it free because you're the VP","Open a rival stand next door","Supporting young business owners is good for everyone."]
+];
+
+(function(){
+var MODE = "kids", GROWN = MODE === "grown";
+var $ = function(id){ return document.getElementById(id); };
+function sleep(ms){ return new Promise(function(r){ setTimeout(r, ms); }); }
+var RM = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* ---------- Glenn Bourbon (same head and body as the Cookie game, with legs and a belt added) ---------- */
+var GLENN_HEAD = '<rect x="26" y="20" width="68" height="66" rx="9" fill="#5b3b26"/>' +
+  '<path d="M22 44c0-22 14-34 38-34s40 10 40 30c-6-6-12-8-20-8 4-6 2-10-2-12-6 6-16 8-26 8-12 0-22 6-30 16z" fill="#161414"/>' +
+  '<path d="M40 18c8-6 22-8 34-2" stroke="#2c2a2a" stroke-width="3" fill="none"/>' +
+  '<path d="M38 50l14-2M68 48l14 2" stroke="#161414" stroke-width="4" stroke-linecap="round"/>' +
+  '<path d="M42 58h10M70 58h10" stroke="#161414" stroke-width="3.5" stroke-linecap="round"/>' +
+  '<path d="M50 74h20" stroke="#161414" stroke-width="3.5" stroke-linecap="round"/>';
+var GLENN_BODY = '<defs><pattern id="gtie" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="5" height="5" fill="#6d9fd0"/><rect width="2" height="2" fill="#4a7cae"/></pattern></defs>' +
+  '<rect x="47" y="80" width="26" height="18" fill="#4e3221"/>' +
+  '<path d="M4 160c0-46 18-66 56-68 38 2 56 22 56 68z" fill="#1d2a4a"/>' +
+  '<path d="M16 160v-34M27 160v-50M38 160v-60M82 160v-60M93 160v-50M104 160v-34" stroke="#3a4b72" stroke-width="1.4"/>' +
+  '<path d="M44 92h32l-16 46z" fill="#f6f6f6"/>' +
+  '<path d="M44 92h10l-4 10zM76 92H66l4 10z" fill="#e2e2e6"/>' +
+  '<path d="M55 93h10l-2 8h-6z" fill="#5b8cbe"/>' +
+  '<path d="M57 101h6l4 24-7 9-7-9z" fill="url(#gtie)"/>' +
+  '<path d="M44 92l16 46h-9L36 114l6-7-7-6z" fill="#253559"/>' +
+  '<path d="M76 92l-16 46h9l15-24-6-7 7-6z" fill="#253559"/>' +
+  '<path d="M40 112l13 22M80 112l-13 22" stroke="#3a4b72" stroke-width="1.2"/>' +
+  '<circle cx="60" cy="144" r="2.4" fill="#0f1830"/><circle cx="60" cy="153" r="2.4" fill="#0f1830"/>';
+function leg(x){
+  return '<g class="leg ' + (x < 50 ? 'leg-l' : 'leg-r') + '"><rect x="' + x + '" y="182" width="25" height="54" fill="#1d2a4a"/>' +
+    '<path d="M' + (x + 8) + ' 184v50" stroke="#3a4b72" stroke-width="1.2"/>' +
+    '<ellipse cx="' + (x + 12) + '" cy="238" rx="15" ry="6.5" fill="#141414"/></g>';
+}
+var GLENN = leg(31) + leg(64) +
+  '<path d="M4 158L14 189H106L116 158Z" fill="#1d2a4a"/>' +
+  '<path d="M20 160v28M32 160v28M88 160v28M100 160v28" stroke="#3a4b72" stroke-width="1.4"/>' +
+  '<path d="M51 162L60 157L69 162L73 189H47Z" fill="#f6f6f6"/>' +
+  '<g class="belt-on"><rect x="47" y="178" width="26" height="7" fill="#3a2414"/><rect x="55.5" y="177" width="9" height="9" rx="1.5" fill="none" stroke="#d9b04a" stroke-width="2.2"/></g>' +
+  '<g class="belt-off"><path d="M47 178H53L57 200L52 201Z" fill="#3a2414"/><path d="M73 178H67L64 197L69 198Z" fill="#3a2414"/><rect x="50" y="199" width="8" height="8" rx="1.5" fill="none" stroke="#d9b04a" stroke-width="2.2"/></g>' +
+  GLENN_BODY + GLENN_HEAD +
+  '<g class="hand hand-l"><circle cx="10" cy="191" r="7.5" fill="#5b3b26"/></g>' +
+  '<g class="hand hand-r"><rect class="mini-phone" x="101" y="173" width="12" height="20" rx="2.5" fill="#111"/><rect class="mini-phone" x="103" y="175" width="8" height="14" rx="1" fill="#c43a3a"/><circle cx="110" cy="191" r="7.5" fill="#5b3b26"/></g>';
+$('glInner').innerHTML = GLENN;
+var gl = $('gl'), gpos = $('glennPos');
+
+function place(x, y, s, ms, op){
+  ms = RM ? Math.min(ms, 1) : ms;
+  gpos.style.transition = ms ? 'transform ' + ms + 'ms linear, opacity ' + ms + 'ms linear' : 'none';
+  gpos.style.transform = 'translate(' + x + 'px,' + y + 'px) scale(' + s + ')';
+  gpos.style.opacity = op == null ? 1 : op;
+  return sleep(ms + 30);
+}
+function walkTo(x, y, s, ms, op){
+  gl.className = 'walking';
+  return place(x, y, s, ms, op).then(function(){ gl.className = 'idle'; });
+}
+function setPose(cls, on){ gl.classList.toggle(cls, on); }
+function fade(on){ $('fade').classList.toggle('on', on); return sleep(RM ? 50 : 750); }
+async function card(text, ms, isTitle){
+  $('cardText').textContent = text; $('card').className = 'card-ov' + (isTitle ? ' title' : ''); $('card').hidden = false;
+  await sleep(ms); $('card').hidden = true;
+}
+
+/* ---------- Scenes ---------- */
+var OFFICE_BG = '<defs>' +
+  '<pattern id="tiles" width="40" height="40" patternUnits="userSpaceOnUse"><rect width="40" height="40" fill="#efe2c4"/><path d="M20 0L40 20 20 40 0 20Z" fill="#b5532f"/><path d="M20 9L31 20 20 31 9 20Z" fill="#2b4f86"/><circle cx="20" cy="20" r="3.5" fill="#efe2c4"/></pattern>' +
+  '<pattern id="ceil" width="50" height="34" patternUnits="userSpaceOnUse"><rect width="50" height="34" fill="#1f3f73"/><path d="M25 8l2.2 5.4 5.8.4-4.5 3.7 1.5 5.6-5-3.1-5 3.1 1.5-5.6-4.5-3.7 5.8-.4z" fill="#e6c467"/></pattern>' +
+  '<linearGradient id="winSky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#bfe3ff"/><stop offset="1" stop-color="#eaf6ff"/></linearGradient>' +
+  '</defs>' +
+  '<rect width="800" height="62" fill="url(#ceil)"/><rect y="58" width="800" height="10" fill="#c9a24a"/><rect y="68" width="800" height="4" fill="#8e6d25"/>' +
+  '<rect y="72" width="800" height="262" fill="#3566a8"/>' +
+  (function(){ var s = ''; for (var x = 14; x < 800; x += 112){ s += '<rect x="' + x + '" y="88" width="98" height="140" fill="none" stroke="#c9a24a" stroke-width="2.5"/><rect x="' + x + '" y="246" width="98" height="74" fill="#2d5a96" stroke="#c9a24a" stroke-width="2"/>'; } return s; })() +
+  '<rect y="236" width="800" height="5" fill="#c9a24a"/>' +
+  '<rect y="330" width="800" height="10" fill="#c9a24a"/>' +
+  '<rect y="340" width="800" height="160" fill="url(#tiles)"/>' +
+  '<rect y="340" width="800" height="160" fill="#000" opacity=".06"/>' +
+  // window + curtains
+  '<rect x="44" y="86" width="132" height="232" fill="#c9a24a"/><rect x="54" y="96" width="112" height="212" fill="url(#winSky)"/>' +
+  '<path d="M110 96v212M54 166h112M54 236h112" stroke="#f4efe3" stroke-width="6"/>' +
+  '<path d="M30 80h160v18c-20 16-60 22-80 22s-60-6-80-22z" fill="#a8792a"/>' +
+  '<path d="M30 92c18 40 22 150 10 236h28c-6-90-8-180-14-236z" fill="#b88a2e"/><path d="M190 92c-18 40-22 150-10 236h-28c6-90 8-180 14-236z" fill="#b88a2e"/>' +
+  // flags
+  '<rect x="213" y="110" width="5" height="226" fill="#c9a24a"/><circle cx="215.5" cy="108" r="6" fill="#e6c467"/>' +
+  '<g transform="translate(218,118)"><rect width="58" height="40" fill="#fff"/><path d="M0 3h58M0 9h58M0 15h58M0 21h58M0 27h58M0 33h58M0 39h58" stroke="#c0282d" stroke-width="3"/><rect width="26" height="21" fill="#21386b"/></g>' +
+  '<rect x="248" y="122" width="5" height="214" fill="#c9a24a"/><circle cx="250.5" cy="120" r="6" fill="#e6c467"/>' +
+  '<g transform="translate(253,130)"><rect width="50" height="36" fill="#f7f7f2"/><circle cx="25" cy="18" r="11" fill="#2b4f86"/><circle cx="25" cy="18" r="5" fill="#f7f7f2"/></g>' +
+  // chandelier
+  '<path d="M400 72v28" stroke="#8e6d25" stroke-width="3"/><path d="M362 112q38 20 76 0" stroke="#c9a24a" stroke-width="5" fill="none"/><ellipse cx="400" cy="104" rx="14" ry="10" fill="#c9a24a"/>' +
+  '<path d="M362 112v-10M380 118v-10M400 121v-10M420 118v-10M438 112v-10" stroke="#fff6d6" stroke-width="4"/><circle cx="362" cy="99" r="3" fill="#ffd56a"/><circle cx="380" cy="105" r="3" fill="#ffd56a"/><circle cx="400" cy="108" r="3" fill="#ffd56a"/><circle cx="420" cy="105" r="3" fill="#ffd56a"/><circle cx="438" cy="99" r="3" fill="#ffd56a"/>' +
+  // fireplace + mirror
+  '<rect x="600" y="84" width="128" height="104" rx="6" fill="#c9a24a"/><rect x="610" y="94" width="108" height="84" fill="#a9c4dc"/><path d="M628 168l40-62M650 172l34-52" stroke="#d8e7f2" stroke-width="5"/>' +
+  '<rect x="580" y="192" width="168" height="14" fill="#f4efe6"/><rect x="592" y="206" width="144" height="128" fill="#ece6da"/><rect x="624" y="242" width="80" height="92" rx="4" fill="#1b1410"/>' +
+  '<path d="M640 330l10-22 12 22M662 330l10-26 12 26" fill="#e7752b"/>' +
+  '<rect x="636" y="180" width="18" height="12" fill="#c9a24a"/><rect x="676" y="178" width="14" height="14" rx="3" fill="#2b4f86"/>' +
+  // chair back (behind Glenn)
+  '<rect x="352" y="188" width="96" height="120" rx="22" fill="#4a2a1a"/><rect x="364" y="198" width="72" height="100" rx="16" fill="#5e3622"/>' +
+  // door
+  '<rect x="470" y="150" width="0" height="0"/>';
+var OFFICE_FG = '<ellipse cx="400" cy="408" rx="160" ry="14" fill="#000" opacity=".18"/>' +
+  '<rect x="262" y="286" width="276" height="18" rx="3" fill="#7d4a26"/><rect x="262" y="300" width="276" height="4" fill="#5b3219"/>' +
+  '<rect x="272" y="304" width="256" height="100" fill="#6b3d1f"/>' +
+  '<rect x="282" y="314" width="70" height="80" fill="none" stroke="#8a5a32" stroke-width="3"/><rect x="448" y="314" width="70" height="80" fill="none" stroke="#8a5a32" stroke-width="3"/>' +
+  '<rect x="362" y="314" width="76" height="30" fill="none" stroke="#8a5a32" stroke-width="3"/><circle cx="400" cy="329" r="3.5" fill="#e6c467"/>' +
+  '<rect x="364" y="360" width="72" height="22" rx="3" fill="#c9a24a"/><text x="400" y="375" text-anchor="middle" font-family="Fredoka,sans-serif" font-weight="700" font-size="9" fill="#3a2414">VICE PRESIDENT</text>' +
+  '<rect x="300" y="276" width="70" height="12" fill="#f7f4ec" transform="rotate(-4 335 282)"/><rect x="306" y="272" width="60" height="10" fill="#fffdf6" transform="rotate(3 336 277)"/>' +
+  '<rect x="470" y="270" width="30" height="16" rx="3" fill="#222"/><path d="M466 268q19-12 38 0" stroke="#222" stroke-width="6" fill="none" stroke-linecap="round"/>' +
+  '<rect x="510" y="262" width="12" height="24" rx="2" fill="#2b4f86"/><path d="M512 262l-3-12M518 262l3-14" stroke="#c9a24a" stroke-width="2"/>';
+
+var PHASES = {
+  day:    {s1:'#7fc6f5', s2:'#d9f0ff', lawn:'#6db34f', lawn2:'#5ea343', shade:0,   lit:0,  stars:0, sun:1, moon:0, sunY:90,  sunC:'#ffe27a'},
+  late:   {s1:'#8fb9e8', s2:'#ffe2b8', lawn:'#64a748', lawn2:'#57983d', shade:.05, lit:0,  stars:0, sun:1, moon:0, sunY:150, sunC:'#ffc86a'},
+  sunset: {s1:'#6b5fa8', s2:'#ff9e6b', lawn:'#4f8a3c', lawn2:'#457c34', shade:.22, lit:.6, stars:.2, sun:1, moon:0, sunY:235, sunC:'#ff8a4a'},
+  night:  {s1:'#081127', s2:'#1f2d5a', lawn:'#20402a', lawn2:'#1b3824', shade:.55, lit:1, stars:1, sun:0, moon:1, sunY:300, sunC:'#ff8a4a'}
+};
+var RES_BG = '<defs><linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop id="sk1" offset="0" stop-color="#7fc6f5"/><stop id="sk2" offset="1" stop-color="#d9f0ff"/></linearGradient></defs>' +
+  '<rect width="800" height="500" fill="url(#sky)"/>' +
+  '<g id="stars" opacity="0">' + (function(){ var s = '', pts = [[40,30],[120,70],[200,24],[260,96],[350,40],[430,18],[500,64],[560,30],[640,80],[700,22],[760,58],[90,140],[180,180],[620,150],[740,170],[300,150],[470,120]]; pts.forEach(function(p){ s += '<circle cx="' + p[0] + '" cy="' + p[1] + '" r="1.8" fill="#fff"/>'; }); return s; })() + '</g>' +
+  '<circle id="sun" cx="690" cy="90" r="34" fill="#ffe27a"/>' +
+  '<g id="moon" opacity="0"><circle cx="680" cy="70" r="26" fill="#f4f1dc"/><circle cx="692" cy="62" r="24" fill="#132048"/></g>' +
+  // trees
+  '<g fill="#3f7a3a"><circle cx="40" cy="300" r="70"/><circle cx="130" cy="280" r="62"/><circle cx="220" cy="310" r="52"/><circle cx="760" cy="300" r="64"/></g>' +
+  '<g fill="#356c33"><circle cx="80" cy="330" r="60"/><circle cx="190" cy="340" r="48"/><circle cx="730" cy="340" r="50"/></g>' +
+  // observatory dome
+  '<rect x="690" y="292" width="92" height="94" fill="#efefea"/><path d="M686 294a50 46 0 0 1 100 0z" fill="#dfe3e8"/><path d="M729 252h14v42h-14z" fill="#9aa4b2"/><rect x="722" y="330" width="28" height="56" fill="#8f9aa8"/>' +
+  // house: turret
+  '<rect x="292" y="128" width="78" height="258" fill="#f7f4ec"/><path d="M282 132L331 38L380 132Z" fill="#5d6f86"/><path d="M331 38v-14" stroke="#8b96a6" stroke-width="3"/><circle cx="331" cy="22" r="3.5" fill="#c9a24a"/>' +
+  '<rect x="292" y="128" width="78" height="6" fill="#e3ddcd"/>' +
+  // main block
+  '<rect x="362" y="150" width="300" height="236" fill="#f7f4ec"/><path d="M350 154L420 92H600L674 154Z" fill="#6f8197"/><rect x="350" y="150" width="324" height="8" fill="#e3ddcd"/>' +
+  '<path d="M488 92L512 62L536 92Z" fill="#6f8197"/><rect x="500" y="74" width="24" height="18" fill="#f7f4ec"/>' +
+  '<rect x="572" y="66" width="18" height="30" fill="#b06a52"/>' +
+  // windows (day color)
+  (function(){ var s = '', xs = [392,452,572,622], ys = [178,246]; ys.forEach(function(y){ xs.forEach(function(x){ s += '<rect class="win" x="' + x + '" y="' + y + '" width="28" height="44" fill="#9ec3e6" stroke="#5b6b80" stroke-width="2"/><path d="M' + (x + 14) + ' ' + y + 'v44" stroke="#5b6b80" stroke-width="2"/>'; }); }); [[317,160],[317,232]].forEach(function(p){ s += '<rect class="win" x="' + p[0] + '" y="' + p[1] + '" width="28" height="46" rx="12" fill="#9ec3e6" stroke="#5b6b80" stroke-width="2"/>'; }); return s; })() +
+  // porch
+  '<rect x="270" y="300" width="420" height="16" fill="#ece7da"/><path d="M262 300h436l-10-12H272z" fill="#6f8197"/>' +
+  (function(){ var s = ''; for (var x = 282; x <= 680; x += 44){ s += '<rect x="' + x + '" y="316" width="8" height="70" fill="#f4f1e8"/>'; } return s; })() +
+  '<rect x="270" y="350" width="420" height="4" fill="#e1dccd"/>' +
+  (function(){ var s = ''; for (var x = 276; x <= 686; x += 11){ if (x > 486 && x < 530) continue; s += '<rect x="' + x + '" y="354" width="3" height="30" fill="#e8e3d6"/>'; } return s; })() +
+  '<rect x="488" y="316" width="40" height="70" fill="#4a5d74"/><circle cx="520" cy="352" r="2.5" fill="#c9a24a"/>' +
+  '<rect x="262" y="384" width="436" height="10" fill="#d9d1bf"/>' +
+  // lawn & path
+  '<rect id="lawn" y="392" width="800" height="108" fill="#6db34f"/><path id="lawn2" d="M0 420q200-14 400 0t400 0v80H0z" fill="#5ea343"/>' +
+  '<path d="M490 394h36l70 106H420z" fill="#e3d3a7"/>' +
+  // flag
+  '<rect x="236" y="164" width="5" height="226" fill="#d9d9d9"/><circle cx="238.5" cy="162" r="5" fill="#c9a24a"/>' +
+  '<g transform="translate(241,168)"><rect width="60" height="40" fill="#fff"/><path d="M0 3h60M0 9h60M0 15h60M0 21h60M0 27h60M0 33h60M0 39h60" stroke="#c0282d" stroke-width="3"/><rect width="26" height="21" fill="#21386b"/></g>' +
+  '<rect id="shade" width="800" height="500" fill="#0a1430" opacity="0" style="transition:opacity 1.2s"/>' +
+  '<g id="lit" opacity="0" style="transition:opacity 1.2s">' + (function(){ var s = '', xs = [392,452,572,622], ys = [178,246], i = 0; ys.forEach(function(y){ xs.forEach(function(x){ s += '<rect class="litw" data-i="' + (i++) + '" x="' + (x + 2) + '" y="' + (y + 2) + '" width="24" height="40" fill="#ffd76a"/>'; }); }); [[317,160],[317,232]].forEach(function(p){ s += '<rect class="litw" data-i="' + (i++) + '" x="' + (p[0] + 2) + '" y="' + (p[1] + 2) + '" width="24" height="42" rx="11" fill="#ffd76a"/>'; }); s += '<circle cx="508" cy="312" r="5" fill="#fff2b0"/>'; return s; })() + '</g>';
+
+function setPhase(name){
+  var p = PHASES[name], q = function(id){ return document.getElementById(id); };
+  if (!q('sk1')) return;
+  q('sk1').setAttribute('stop-color', p.s1); q('sk2').setAttribute('stop-color', p.s2);
+  q('lawn').setAttribute('fill', p.lawn); q('lawn2').setAttribute('fill', p.lawn2);
+  q('shade').style.opacity = p.shade; q('lit').style.opacity = p.lit; q('stars').setAttribute('opacity', p.stars);
+  q('sun').setAttribute('opacity', p.sun); q('sun').setAttribute('cy', p.sunY); q('sun').setAttribute('fill', p.sunC);
+  q('moon').setAttribute('opacity', p.moon);
+}
+
+var ROAD_BG = '<defs><linearGradient id="rsky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8fc8f2"/><stop offset="1" stop-color="#e3f3ff"/></linearGradient></defs>' +
+  '<rect width="800" height="500" fill="url(#rsky)"/>' +
+  '<path d="M392 300L400 70 408 300Z" fill="#f2efe6"/><path d="M395 82h10" stroke="#d8d3c4" stroke-width="2"/>' +
+  '<path d="M0 300h800v20H0z" fill="#9db58a"/><g fill="#7e9a6c"><rect x="60" y="270" width="90" height="30"/><rect x="520" y="262" width="120" height="38"/><rect x="660" y="276" width="70" height="24"/></g>' +
+  '<path d="M560 300v-40a50 30 0 0 1 100 0v40z" fill="#f4f1e8"/>' +
+  '<rect y="320" width="800" height="180" fill="#6b6f78"/><path d="M0 408h800" stroke="#f2d25c" stroke-width="6" stroke-dasharray="40 30"/>' +
+  '<g class="suv">' + [0,170,340].map(function(dx){ return '<g transform="translate(' + dx + ',0)"><rect x="0" y="352" width="130" height="50" rx="10" fill="#141414"/><path d="M14 352l18-30h66l20 30z" fill="#1f1f1f"/><path d="M38 348l10-20h22v20zM76 348v-20h20l12 20z" fill="#3c4b5e"/><circle cx="30" cy="404" r="14" fill="#0a0a0a"/><circle cx="102" cy="404" r="14" fill="#0a0a0a"/><circle cx="30" cy="404" r="6" fill="#777"/><circle cx="102" cy="404" r="6" fill="#777"/><rect x="122" y="364" width="8" height="8" fill="#ffe27a"/>' + (dx === 170 ? '<path d="M16 352v-30" stroke="#ccc" stroke-width="2"/><rect x="17" y="322" width="18" height="12" fill="#f7f7f2"/><circle cx="26" cy="328" r="3.5" fill="#2b4f86"/>' : '') + '</g>'; }).join('') + '</g>';
+
+var ALLEY_BG = '<defs>' +
+  '<pattern id="brickL" width="40" height="20" patternUnits="userSpaceOnUse"><rect width="40" height="20" fill="#4b2620"/><path d="M0 10h40M0 20h40M10 0v10M30 10v10" stroke="#2a1410" stroke-width="2"/></pattern>' +
+  '<pattern id="brickR" width="40" height="20" patternUnits="userSpaceOnUse"><rect width="40" height="20" fill="#43221c"/><path d="M0 10h40M0 20h40M10 0v10M30 10v10" stroke="#24110e" stroke-width="2"/></pattern>' +
+  '<radialGradient id="glow"><stop offset="0" stop-color="#ffd27a" stop-opacity=".55"/><stop offset="1" stop-color="#ffd27a" stop-opacity="0"/></radialGradient>' +
+  '<linearGradient id="deep" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#050609"/><stop offset="1" stop-color="#0d0f16"/></linearGradient>' +
+  '</defs>' +
+  '<rect width="800" height="500" fill="#0b0d14"/>' +
+  '<path d="M250 0H550L470 140H330Z" fill="#17204a"/><circle cx="380" cy="40" r="1.6" fill="#fff"/><circle cx="450" cy="22" r="1.4" fill="#fff"/><circle cx="420" cy="80" r="1.4" fill="#fff"/>' +
+  '<rect x="330" y="140" width="140" height="222" fill="url(#deep)"/>' +
+  '<path d="M0 0L330 140V362L0 500Z" fill="url(#brickL)"/><path d="M0 0L330 140V362L0 500Z" fill="#000" opacity=".35"/>' +
+  '<path d="M800 0L470 140V362L800 500Z" fill="url(#brickR)"/><path d="M800 0L470 140V362L800 500Z" fill="#000" opacity=".45"/>' +
+  '<path d="M0 500L330 362H470L800 500Z" fill="#191b22"/>' +
+  // fire escape
+  '<path d="M60 60L200 120M60 120L200 178M60 60v60M200 120v58" stroke="#16181e" stroke-width="5" fill="none"/><path d="M80 70l100 100" stroke="#16181e" stroke-width="3"/>' +
+  // dumpster
+  '<path d="M70 360L230 330V420L70 460Z" fill="#2f4f3a"/><path d="M62 352L238 320 236 334 64 368Z" fill="#24402e"/><path d="M110 380v66M160 370v62M200 362v56" stroke="#24402e" stroke-width="3"/>' +
+  '<ellipse cx="270" cy="420" rx="26" ry="18" fill="#141414"/><ellipse cx="292" cy="408" rx="18" ry="14" fill="#1b1b1b"/>' +
+  // puddle
+  '<ellipse cx="430" cy="444" rx="70" ry="10" fill="#2a3350" opacity=".6"/>' +
+  // lamp
+  '<path d="M640 150h-40v14" stroke="#16181e" stroke-width="5" fill="none"/><path d="M588 164h24l-6 12h-12z" fill="#2a2c33"/><circle cx="600" cy="180" r="5" fill="#ffe6a3"/>' +
+  '<circle cx="600" cy="190" r="170" fill="url(#glow)"/><path d="M590 180L470 470H760Z" fill="#ffd27a" opacity=".06"/>';
+
+/* ---------- Game state ---------- */
+var S = { appr: 60, tally: [0, 0, 0] };
+function pickFresh(pool, n, key){
+  var seen = [];
+  try { seen = JSON.parse(localStorage.getItem(key) || '[]'); } catch (e) {}
+  var idx = pool.map(function(_, i){ return i; }).filter(function(i){ return seen.indexOf(i) < 0; });
+  if (idx.length < n){ seen = []; idx = pool.map(function(_, i){ return i; }); }
+  shuffle(idx); var pick = idx.slice(0, n);
+  try { localStorage.setItem(key, JSON.stringify(seen.concat(pick))); } catch (e) {}
+  return pick.map(function(i){ return pool[i]; });
+}
+function shuffle(a){ for (var i = a.length - 1; i > 0; i--){ var j = Math.floor(Math.random() * (i + 1)), t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
+function setApproval(v){ S.appr = Math.max(0, Math.min(100, v)); $('bar').style.width = S.appr + '%'; $('appr').textContent = S.appr + '%'; }
+function setHud(where, time){ if (where) $('where').textContent = where; if (time) $('clock').textContent = time; }
+function fmt(mins){ var h = Math.floor(mins / 60), m = mins % 60, ap = h >= 12 ? 'PM' : 'AM', hh = h % 12 || 12; return hh + ':' + (m < 10 ? '0' : '') + m + ' ' + ap; }
+
+var panel = $('panel');
+function el(tag, cls, text){ var e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; }
+function narrate(eyebrow, title, text){
+  panel.innerHTML = '';
+  if (eyebrow) panel.appendChild(el('span', 'eyebrow', eyebrow));
+  if (title) panel.appendChild(el('h2', null, title));
+  if (text) panel.appendChild(el('p', null, text));
+}
+function ask(sc, label){
+  return new Promise(function(resolve){
+    panel.innerHTML = '';
+    panel.appendChild(el('span', 'eyebrow', label));
+    panel.appendChild(el('h2', null, sc[0]));
+    panel.appendChild(el('p', null, sc[1]));
+    var box = el('div', 'choices'), opts = shuffle([[sc[2], 2], [sc[3], 1], [sc[4], 0]]), btns = [];
+    opts.forEach(function(o){
+      var b = el('button', 'choice', o[0]); b.type = 'button';
+      b.onclick = function(){
+        btns.forEach(function(x){ x.disabled = true; }); b.classList.add('picked');
+        var delta = o[1] === 2 ? 6 : o[1] === 1 ? 1 : -6;
+        S.tally[o[1]]++; setApproval(S.appr + delta);
+        var fb = el('div', 'fb ' + (o[1] === 2 ? 'g' : o[1] === 1 ? 'o' : 'p'));
+        fb.appendChild(el('b', null, (o[1] === 2 ? 'Great call!' : o[1] === 1 ? 'That works, sort of.' : 'Uh-oh.') + ' Approval ' + (delta > 0 ? '+' : '') + delta));
+        fb.appendChild(el('span', null, sc[5]));
+        panel.appendChild(fb);
+        var nx = el('button', 'btn', 'Next'); nx.type = 'button'; nx.onclick = function(){ resolve(); };
+        panel.appendChild(nx); nx.focus();
+      };
+      btns.push(b); box.appendChild(b);
+    });
+    panel.appendChild(box);
+  });
+}
+
+var PER = 6;
+async function play(){
+  S = { appr: 60, tally: [0, 0, 0] }; setApproval(60);
+  var office = pickFresh(OFFICE, PER, 'gns-vp-seen-office'), res = pickFresh(RESIDENCE, PER, 'gns-vp-seen-res');
+
+  // Office
+  $('bg').innerHTML = OFFICE_BG; $('fg').innerHTML = OFFICE_FG;
+  setHud("The Vice President's Office", '8:00 AM');
+  narrate('8:00 AM', 'Good morning, Mr. Vice President', "Glenn Bourbon arrives at his ceremonial office with the blue walls, gold stars, and tile floor.");
+  await place(-140, 236, .95, 0); await fade(false);
+  await walkTo(150, 236, .95, 2200);
+  await place(343, 138, .95, 700);
+  for (var i = 0; i < office.length; i++){
+    setHud(null, fmt(8 * 60 + 15 + i * 45));
+    await ask(office[i], 'Office problem ' + (i + 1) + ' of ' + office.length);
+  }
+
+  // Motorcade
+  setHud('On the road', '2:05 PM');
+  narrate('2:05 PM', 'Motorcade to the Naval Observatory', 'Glenn heads home to the Vice President\'s residence.');
+  await fade(true); $('bg').innerHTML = ROAD_BG; $('fg').innerHTML = ''; gpos.style.opacity = 0; await fade(false);
+  await sleep(RM ? 1200 : 4600);
+  await fade(true);
+
+  // Residence
+  $('bg').innerHTML = RES_BG; setPhase('day');
+  setHud('The Naval Observatory', '2:30 PM');
+  narrate('2:30 PM', 'Home at the Naval Observatory', 'The white house with the round tower is where the Vice President lives.');
+  await place(-140, 270, .86, 0); await fade(false);
+  await walkTo(110, 270, .86, 2000);
+  var phases = ['day', 'day', 'late', 'late', 'sunset', 'sunset'];
+  for (var j = 0; j < res.length; j++){
+    setPhase(phases[j] || 'sunset'); setHud(null, fmt(14 * 60 + 45 + j * 50));
+    await ask(res[j], 'Home problem ' + (j + 1) + ' of ' + res.length);
+  }
+
+  // Night: the phone
+  setPhase('night'); setHud(null, '9:47 PM');
+  narrate('9:47 PM', 'Nighttime', 'Glenn checks his phone.');
+  await sleep(1200);
+  setPose('phone-pose', true); await sleep(700);
+  $('phone').hidden = false; await sleep(2600); $('phone').hidden = true;
+  setPose('phone-pose', false); await sleep(800);
+
+  if (GROWN) await alleyEnding(); else await kidsEnding();
+  showEnd();
+}
+
+async function kidsEnding(){
+  narrate('9:50 PM', 'Lights out', 'Glenn puts his phone away and heads inside.');
+  await walkTo(400, 252, .62, 1800);
+  await walkTo(476, 239, .58, 900, 0);
+  var lit = Array.prototype.slice.call(document.querySelectorAll('.litw'));
+  for (var k = 0; k < lit.length; k++){ lit[k].setAttribute('opacity', 0); await sleep(RM ? 40 : 260); }
+  await sleep(600);
+  await fade(true);
+  await card('Goodnight, Mr. Vice President.', 2600, true);
+}
+
+async function alleyEnding(){
+  narrate('9:52 PM', '', '');
+  await walkTo(-160, 270, .86, 1900);
+  await fade(true);
+  $('bg').innerHTML = ALLEY_BG; $('fg').innerHTML = '';
+  await place(600, 238, 1.0, 0, 1); await fade(false);
+  await walkTo(373, 255, .45, 2600, .15);
+  await sleep(500);
+  await fade(true);
+  await card('40 Minutes Later', 2600);
+  gl.classList.add('unbuckled');
+  await place(373, 255, .45, 0, .15); await fade(false);
+  await walkTo(340, 236, 1.0, 2600, 1);
+  await sleep(1400);
+  setPose('buckle', true); await sleep(900);
+  gl.classList.remove('unbuckled'); await sleep(500);
+  setPose('buckle', false); await sleep(1200);
+  await fade(true);
+}
+
+function showEnd(){
+  var a = S.appr, rank = a >= 85 ? 'Vice President of the Year' : a >= 65 ? 'A Steady Hand' : a >= 45 ? 'A Rough Day' : 'Time for a Vacation';
+  panel.innerHTML = '';
+  panel.appendChild(el('p', 'end-title', 'The End.'));
+  panel.appendChild(el('p', null, "That's the end of the game. Glenn finished the day with " + a + '% approval: ' + rank + '.'));
+  var st = el('div', 'stats');
+  st.appendChild(el('span', null, 'Great calls: ' + S.tally[2]));
+  st.appendChild(el('span', null, 'So-so calls: ' + S.tally[1]));
+  st.appendChild(el('span', null, 'Uh-ohs: ' + S.tally[0]));
+  panel.appendChild(st);
+  var b = el('button', 'btn', 'Play another day'); b.type = 'button';
+  b.onclick = function(){ startScreen(); }; panel.appendChild(b);
+}
+
+function startScreen(){
+  gl.className = 'idle';
+  $('bg').innerHTML = OFFICE_BG; $('fg').innerHTML = OFFICE_FG;
+  $('card').hidden = true; $('phone').hidden = true;
+  place(343, 138, .95, 0); $('fade').classList.remove('on');
+  setHud("The Vice President's Office", '7:55 AM'); setApproval(60);
+  panel.innerHTML = '';
+  panel.appendChild(el('span', 'eyebrow', GROWN ? 'Grown-Up Edition' : 'A GNS Kids game'));
+  panel.appendChild(el('h2', null, 'Be Vice President Glenn Bourbon for a day'));
+  panel.appendChild(el('p', null, 'Work in the Vice President\'s office, ride the motorcade home to the Naval Observatory, and solve the problems that come up along the way. Smart choices raise your approval.'));
+  var b = el('button', 'btn', 'Start the day'); b.type = 'button';
+  b.onclick = function(){ fade(true).then(play); };
+  panel.appendChild(b);
+}
+
+if (GROWN){
+  $('edTag').hidden = false;
+  $('gate').hidden = false;
+  $('gateGo').onclick = function(){ $('gate').hidden = true; };
+}
+startScreen();
+})();
+</script>
+
+</body></html>
