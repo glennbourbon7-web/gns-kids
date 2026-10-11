@@ -207,6 +207,59 @@ a.btn{text-decoration:none;display:inline-block}
 .pop{animation:pop .45s ease}
 @keyframes pop{40%{transform:scale(1.25)}}
 @media (prefers-reduced-motion:reduce){.pop,.spark{animation:none}}
+
+/* Powers Points + avatar closet */
+:root{--gold:#f2c230;--gold-ink:#5c4300}
+.mast .date{margin-left:0}
+.pp-pill{margin-left:auto;display:inline-flex;align-items:center;gap:6px;background:#fff;color:var(--brand);text-decoration:none;font-family:var(--display);font-weight:600;border-radius:999px;padding:7px 14px;white-space:nowrap;flex:none}
+.pp-pill b{font-variant-numeric:tabular-nums;font-weight:700}
+.pp-pill span{color:var(--gold)}
+.pp-pill:focus-visible{outline:3px solid #fff;outline-offset:3px}
+.pp-pill.pop{animation:pop .45s ease}
+.pp-award{display:flex;gap:14px;align-items:center;background:#fff6d6;color:var(--gold-ink);border:2px solid var(--gold);border-radius:16px;padding:14px 16px}
+.pp-award img{width:58px;height:58px;border-radius:50%;background:#fff;flex:none}
+.pp-award strong{font-family:var(--display);font-size:1.3rem;display:block}
+.pp-award p{margin:2px 0 10px}
+.pp-award .btn{margin-top:0}
+.pp-miss{background:var(--chip);border-radius:14px;padding:12px 16px;font-weight:600}
+.av{display:grid;grid-template-columns:minmax(0,330px) minmax(0,1fr);gap:20px;align-items:start}
+.av-me,.av-closet{background:var(--surface);border:2px solid var(--line);border-radius:22px;padding:20px;display:grid;gap:14px;min-width:0}
+.av-figure{background:linear-gradient(180deg,var(--chip),var(--bg));border-radius:18px;display:grid;place-items:center;padding:14px}
+.av-figure svg{width:100%;max-width:220px;height:auto;display:block}
+.av-bal{display:flex;align-items:baseline;gap:8px;justify-content:center;font-family:var(--display)}
+.av-bal b{font-size:2.4rem;line-height:1;font-variant-numeric:tabular-nums}
+.av-bal span{font-weight:600;color:var(--muted)}
+.av-bal .av-star{color:var(--gold);font-size:1.8rem}
+.av-pick{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.av-lbl{font-family:var(--display);font-weight:600;min-width:3em}
+.av-sw{display:flex;gap:8px;flex-wrap:wrap}
+.av-sw button{width:34px;height:34px;border-radius:50%;border:3px solid var(--surface);box-shadow:0 0 0 2px var(--line);cursor:pointer;padding:0}
+.av-sw button[aria-pressed="true"]{box-shadow:0 0 0 3px var(--brand-2)}
+.av-sw button:focus-visible,.av-tabs button:focus-visible{outline:3px solid var(--fg);outline-offset:3px}
+.av-earn{border-top:2px solid var(--line);padding-top:12px;font-size:.92rem}
+.av-earn strong{font-family:var(--display);font-size:1.05rem}
+.av-earn ul{list-style:none;margin:8px 0;padding:0;display:grid;gap:6px}
+.av-earn li{display:grid;gap:0;line-height:1.35}
+.av-earn li span:first-child{font-weight:700}
+.av-earn li span:last-child{color:var(--muted)}
+.av-earn p{margin:0;color:var(--muted);font-size:.85rem}
+.av-tabs{display:flex;gap:8px;flex-wrap:wrap}
+.av-tabs button{font-family:var(--display);font-weight:600;font-size:1rem;border:0;border-radius:999px;padding:8px 16px;background:var(--chip);color:var(--fg);cursor:pointer;display:inline-flex;gap:6px;align-items:center}
+.av-tabs button[aria-pressed="true"]{background:var(--brand-2);color:#fff}
+.av-n{font-size:.75rem;opacity:.75;font-weight:500}
+.av-note{margin:0;min-height:1.5em;font-weight:700;color:#16602d}
+.av-items{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:14px}
+.av-item{border:2px solid var(--line);border-radius:18px;padding:10px 10px 12px;display:grid;gap:8px;text-align:center;background:var(--bg)}
+.av-item.on{border-color:var(--brand-2)}
+.av-item h3{font-family:var(--display);font-weight:600;font-size:1rem;margin:0;line-height:1.2}
+.av-item .btn{align-self:auto;margin:0;font-size:.95rem;padding:9px 12px;width:100%}
+.av-item .btn[aria-disabled="true"]{cursor:default}
+.av-item .btn:disabled{cursor:default;opacity:.8}
+.av-mini{position:relative;background:var(--surface);border-radius:12px;padding:6px}
+.av-mini svg{width:100%;max-width:110px;height:auto;display:block;margin:0 auto}
+.av-item.locked .av-mini svg{opacity:.55;filter:grayscale(.35)}
+.av-lock{position:absolute;top:6px;right:6px;background:var(--gold);color:var(--gold-ink);font-family:var(--display);font-weight:700;font-size:.85rem;border-radius:999px;padding:2px 9px}
+@media (max-width:760px){.av{grid-template-columns:1fr}.pp-pill{padding:6px 11px;font-size:.9rem}.pp-pill .pp-word{display:none}.av-items{grid-template-columns:repeat(2,minmax(0,1fr))}}
 </style>
 </head>
 <body>
@@ -218,6 +271,7 @@ a.btn{text-decoration:none;display:inline-block}
       <h1>GNS Kids</h1>
       <p>Shows, games and fun for kids</p>
     </div>
+    <a class="pp-pill" id="pp-pill" href="#avatar" aria-label="Powers Points: open my avatar closet"><span aria-hidden="true">★</span><b id="pp-count">0</b><span class="pp-word" style="color:inherit">Powers Points</span></a>
     <div class="date" id="today"></div>
   </div>
 </header>
@@ -227,6 +281,7 @@ a.btn{text-decoration:none;display:inline-block}
     <a href="#featured">Featured</a>
     <a href="#shows">Shows</a>
     <a href="#games">Games</a>
+    <a href="#avatar">My Avatar</a>
     <a href="#music">Music</a>
     <a href="#crafts">Crafts &amp; Activities</a>
   </div>
@@ -297,6 +352,10 @@ a.btn{text-decoration:none;display:inline-block}
           </div>
         </article>
       </div>
+    </section>
+    <section id="avatar"><h2>My Avatar</h2>
+      <p style="margin:-6px 0 16px;color:var(--muted);max-width:70ch">Win games to earn Powers Points from Richard Powers, then spend them on new clothes for your avatar.</p>
+      <div class="av" id="avatar-app"></div>
     </section>
     <section id="music"><h2>Music</h2>
       <div class="tracks">
@@ -439,6 +498,7 @@ a.btn{text-decoration:none;display:inline-block}
     mbody.appendChild(sc);
     if (s.end){
       mbody.appendChild(el('div','end ' + s.end, s.end === 'win' ? 'You did it! You finished Richard\'s whole story.' : 'The End? That is not how Richard\'s story really goes. Try again!'));
+      if (window.PowersPoints) mbody.appendChild(s.end === 'win' ? PowersPoints.award('From Hovel to the House', 50) : PowersPoints.miss('Finish Richard\'s whole story to earn 50 Powers Points.'));
       var row = el('div','row'), again = el('button','btn','Play again'); again.onclick = function(){ story('born'); }; row.appendChild(again);
       if (s.end === 'lose'){ var back = el('button','btn ghost','Go back one step'); back.onclick = function(){ story(prev); }; row.appendChild(back); }
       mbody.appendChild(row); again.focus(); return;
@@ -502,6 +562,8 @@ a.btn{text-decoration:none;display:inline-block}
     mbody.appendChild(el('div','big-score', score + ' / ' + ROUND));
     var h = el('h4',null,'Your rank: ' + rank); h.style.cssText = 'font-family:var(--display);font-size:1.5rem;margin:0';
     mbody.appendChild(h); mbody.appendChild(el('p',null,msg));
+    var pts = score === 10 ? 60 : score >= 8 ? 40 : score >= 6 ? 20 : 0;
+    if (window.PowersPoints) mbody.appendChild(pts ? PowersPoints.award('the GNS Fact Desk', pts) : PowersPoints.miss('Get 6 or more right to earn Powers Points.'));
     var b = el('button','btn','Play again'); b.onclick = deskStart; mbody.appendChild(b); b.focus();
   }
   document.getElementById('play-desk').onclick = function(){ open('GNS Fact Desk', this); deskStart(); };
@@ -614,6 +676,7 @@ a.btn{text-decoration:none;display:inline-block}
           for (var i = 0; i < w.length; i++){ var e = cell(q[0]+dr*i, q[1]+dc*i); e.classList.add('found'); list.push(e); }
           sparkle(list);
           document.getElementById('ws-' + w).classList.add('done'); meta();
+          if (Object.keys(found).length === p.words.length && window.PowersPoints) b.appendChild(PowersPoints.award('the Word Search', 40));
           return;
         }
       }
@@ -698,7 +761,7 @@ a.btn{text-decoration:none;display:inline-block}
     CW.words.forEach(function(x){ x.n = starts[x.r+','+x.c]; x.cells = []; for (var i = 0; i < x.w.length; i++) x.cells.push((x.d==='A'?x.r:x.r+i)+','+(x.d==='A'?x.c+i:x.c)); });
     b.innerHTML = '<div class="meta" id="cw-meta"></div><div class="cw"><div class="cwwrap"><div class="cwgrid" id="cwg" style="grid-template-columns:repeat(' + CW.cols + ',auto)"></div></div><div class="clues" id="cwc"></div></div><div class="row"><button class="btn" id="cw-check">Check answers</button><button class="btn ghost" id="cw-reveal">Show answers</button><button class="btn ghost" id="cw-new">New puzzle</button></div><div id="cw-msg"></div>';
     document.getElementById('cw-new').onclick = crossword;
-    var grid = document.getElementById('cwg'), inputs = {}, dir = 'A', solved = {};
+    var grid = document.getElementById('cwg'), inputs = {}, dir = 'A', solved = {}, revealed = false, paid = false;
     function meta(){ var n = Object.keys(solved).length; document.getElementById('cw-meta').textContent = n === CW.words.length ? 'All ' + n + ' words solved!' : n + ' of ' + CW.words.length + ' words solved'; }
     function checkWords(){
       CW.words.forEach(function(x){
@@ -709,7 +772,8 @@ a.btn{text-decoration:none;display:inline-block}
       });
       for (var k in inputs){ var still = CW.words.some(function(x){ return solved[x.n + x.d] && x.cells.indexOf(k) >= 0; }); if (!still) inputs[k].classList.remove('solved'); }
       meta();
-      if (Object.keys(solved).length === CW.words.length){ var m = document.getElementById('cw-msg'); m.className = 'feedback good'; m.textContent = 'You solved the whole crossword! Great job, editor.'; }
+      if (Object.keys(solved).length === CW.words.length){ var m = document.getElementById('cw-msg'); m.className = 'feedback good'; m.textContent = 'You solved the whole crossword! Great job, editor.';
+        if (!paid && window.PowersPoints){ paid = true; b.appendChild(revealed ? PowersPoints.miss('Showing the answers doesn\'t earn Powers Points. Try a new puzzle and solve it yourself for 60!') : PowersPoints.award('the Crossword', 60)); } }
     }
     for (var r = 0; r < CW.rows; r++) for (var c = 0; c < CW.cols; c++){
       var k = r+','+c, cellEl = el('div','c' + (ans[k] ? ' on' : ''));
@@ -761,7 +825,7 @@ a.btn{text-decoration:none;display:inline-block}
       msg.className = 'feedback bad';
       msg.textContent = wrong ? wrong + ' square(s) need fixing' + (empty ? ' and ' + empty + ' are still empty.' : '.') : 'Everything so far is right! ' + empty + ' square(s) still empty.';
     };
-    document.getElementById('cw-reveal').onclick = function(){ for (var k in inputs){ inputs[k].value = ans[k]; inputs[k].classList.remove('bad'); } msg.className=''; msg.textContent=''; checkWords(); };
+    document.getElementById('cw-reveal').onclick = function(){ revealed = true; for (var k in inputs){ inputs[k].value = ans[k]; inputs[k].classList.remove('bad'); } msg.className=''; msg.textContent=''; checkWords(); };
     meta();
   }
   document.getElementById('play-cw').onclick = function(){ G.open('GNS Crossword', this, true); crossword(); };
@@ -774,6 +838,7 @@ document.addEventListener('play',function(e){document.querySelectorAll('audio').
 try{document.getElementById('today').textContent=new Date().toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'})}catch(e){}
 </script>
 
+<script src="powers-points.js"></script>
 <script src="arcade-games.js"></script>
 </body>
 </html>

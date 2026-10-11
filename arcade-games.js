@@ -220,6 +220,8 @@
       var intro = el('div', 'gk-intro'), im = el('img'); im.src = src(RICHARD); im.alt = 'Richard Powers';
       intro.appendChild(im); intro.appendChild(el('p', null, 'You trapped ' + caught + ' beaver' + (caught === 1 ? '' : 's') + '. "The riverbank is safe again," says Richard Powers. ' + (newBest ? 'That\'s a new best score!' : 'Your best is ' + Math.max(best, score) + '.')));
       b.appendChild(intro);
+      var pts = score >= 45 ? 50 : score >= 30 ? 30 : score >= 15 ? 15 : 0;
+      if (window.PowersPoints) b.appendChild(pts ? PowersPoints.award('Beaver Trapping', pts) : PowersPoints.miss('Score 15 or more to earn Powers Points.'));
       var row = el('div', 'row'), again = el('button', 'btn', 'Play again'); again.onclick = beaverPlay; row.appendChild(again); b.appendChild(row); again.focus();
     }
     G.onClose = function(){ over = true; cancelAnimationFrame(raf); };
@@ -450,6 +452,8 @@
     if (CK.bad) notes.push('Glenn caught ' + CK.bad + ' yucky thing' + (CK.bad === 1 ? '' : 's') + ' in the bowl.');
     var sayp = el('p', null, '"' + (score >= 65 ? 'Now that is a Big Ole\' Red Cookie!' : 'We will get it next time.') + '" says Glenn Bourbon. ' + notes.join(' ') + (newBest ? ' New best cookie!' : ''));
     b.appendChild(sayp);
+    var pts = stars === 3 ? 50 : stars === 2 ? 30 : stars === 1 ? 15 : 0;
+    if (window.PowersPoints) b.appendChild(pts ? PowersPoints.award('the Big Ole\' Red Cookie', pts) : PowersPoints.miss('Bake a cookie worth at least 1 star to earn Powers Points.'));
     var row = el('div', 'row'), again = el('button', 'btn', 'Bake another'); again.onclick = cookieGather; row.appendChild(again); b.appendChild(row); again.focus();
     G.onClose = null;
   }
