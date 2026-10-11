@@ -45,6 +45,7 @@ body{margin:0}
 .vinfo{padding:14px 18px 18px;display:grid;gap:4px}
 .vinfo h3{font-family:var(--display);font-weight:700;font-size:1.3rem;margin:0}
 .vinfo p{margin:0;color:var(--muted)}
+.vinfo .vmeta{font-family:var(--display);font-weight:600;color:var(--brand-2);font-size:.85rem;letter-spacing:.06em;text-transform:uppercase}
 /* Get the app */
 .app-lead{margin:0 0 14px;max-width:62ch}
 .appsteps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
@@ -363,8 +364,8 @@ a.btn{text-decoration:none;display:inline-block}
     <section id="videos"><h2>Videos</h2>
       <div class="vids">
         <article class="vcard" id="vid-powers-rap">
-          <div class="vframe"><div class="vsoon"><img src="logo.png" alt=""><strong>The Powers Rap</strong><span>Coming soon</span></div></div>
-          <div class="vinfo"><h3>The Powers Rap</h3><p>President Justin Powers raps about being kind, sharing, and treating everybody right.</p></div>
+          <div class="vframe"><video src="media/powers-rap.mp4" poster="media/powers-rap-poster.jpg" controls playsinline preload="metadata" aria-label="The Powers Rap music video"></video></div>
+          <div class="vinfo"><h3>The Powers Rap</h3><p class="vmeta">Music video · 2:11</p><p>President Justin Powers raps about being kind, sharing, and treating everybody right.</p></div>
         </article>
       </div>
     </section>
@@ -911,8 +912,8 @@ try{document.getElementById('today').textContent=new Date().toLocaleDateString('
 <script>
 /* GNS Kids intro: logo pops in with the jingle, then fades into the site on "Kids" */
 (function(){
-  var JINGLE = null;           // "media/gns-kids-jingle.mp3" once the jingle is added
-  var FADE_AT = 2300;          // ms after start: when the intro fades into the site
+  var JINGLE = "media/gns-kids-jingle.mp3";
+  var FADE_AT = 2650;          // ms after the jingle starts: fade into the site on "Kids"
   var ov = document.getElementById('kintro'), tap = document.getElementById('ktap');
   var colors = ['#ffd84d','#fff','#7fd3ff','#ffb3a8','#9be3b0'];
   for (var i = 0; i < 18; i++){
