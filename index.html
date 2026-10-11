@@ -76,7 +76,10 @@ header.mast{background:var(--brand);color:#fff}
 .mast h1{font-family:var(--display);font-weight:700;font-size:clamp(1.8rem,4vw,2.6rem);margin:0;line-height:1;letter-spacing:.01em}
 .mast p{margin:4px 0 0;font-weight:600;opacity:.9}
 .mast .date{margin-left:auto;font-family:var(--display);font-weight:500;font-size:.95rem;opacity:.9;text-align:right}
-nav.tabs{background:var(--surface);border-bottom:2px solid var(--line);position:sticky;top:env(safe-area-inset-top,0px);z-index:5}
+nav.tabs{background:var(--surface);border-bottom:2px solid var(--line);position:sticky;top:env(safe-area-inset-top,0px);z-index:5;transition:transform .28s ease}
+nav.tabs.tabs-away{transform:translateY(calc(-100% - env(safe-area-inset-top,0px) - 4px))}
+.sbar{position:fixed;top:0;left:0;right:0;height:env(safe-area-inset-top,0px);background:var(--brand);z-index:6;pointer-events:none}
+@media (prefers-reduced-motion:reduce){nav.tabs{transition:none}}
 nav.tabs .wrap{display:flex;gap:8px;overflow-x:auto;padding-block:10px;scrollbar-width:none}
 nav.tabs a{font-family:var(--display);font-weight:600;color:var(--fg);text-decoration:none;padding:7px 16px;border-radius:999px;background:var(--chip);white-space:nowrap}
 nav.tabs a:hover,nav.tabs a:focus-visible{background:var(--brand-2);color:#fff;outline:none}
@@ -308,6 +311,7 @@ a.btn{text-decoration:none;display:inline-block}
   <img class="klogo" src="logo.png" alt="">
   <button class="ktap" id="ktap" type="button" hidden>Tap to start!</button>
 </div>
+<div class="sbar" aria-hidden="true"></div>
 <header class="mast">
   <div class="wrap">
     <img src="logo.png" alt="GNS Kids logo">
@@ -940,6 +944,23 @@ try{document.getElementById('today').textContent=new Date().toLocaleDateString('
   var btn = document.getElementById('installBtn'), ev = null;
   window.addEventListener('beforeinstallprompt', function(e){ e.preventDefault(); ev = e; btn.hidden = false; });
   btn.addEventListener('click', function(){ if (!ev) return; ev.prompt(); ev = null; btn.hidden = true; });
+})();
+</script>
+<script>
+/* Tab bar: slides away while scrolling down the page, comes back when scrolling up */
+(function(){
+  var nav = document.querySelector('nav.tabs'); if (!nav) return;
+  var last = window.scrollY, ticking = false;
+  function upd(){
+    var y = window.scrollY, d = y - last;
+    if (y < 160) nav.classList.remove('tabs-away');
+    else if (d > 6) nav.classList.add('tabs-away');
+    else if (d < -6) nav.classList.remove('tabs-away');
+    if (Math.abs(d) > 6 || y < 160) last = y;
+    ticking = false;
+  }
+  window.addEventListener('scroll', function(){ if (!ticking){ ticking = true; requestAnimationFrame(upd); } }, { passive: true });
+  nav.addEventListener('focusin', function(){ nav.classList.remove('tabs-away'); });
 })();
 </script>
 </body>
