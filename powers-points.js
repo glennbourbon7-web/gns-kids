@@ -218,6 +218,58 @@
     var same = document.querySelector('#av-closet [data-item="' + id + '"] button'); if (same) same.focus();
   }
 
+  /* ---------- Keeping saves safe ---------- */
+  // Ask the browser to keep this save instead of clearing it after a while.
+  try { if (navigator.storage && navigator.storage.persist) navigator.storage.persist().catch(function(){}); } catch(e){}
+  // Save codes move points and the avatar to the app or another device.
+  function b64e(s){ return btoa(unescape(encodeURIComponent(s))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,''); }
+  function b64d(s){ s = s.replace(/-/g,'+').replace(/_/g,'/'); while (s.length % 4) s += '='; return decodeURIComponent(escape(atob(s))); }
+  function makeCode(){
+    var paid = Object.keys(D.owned).filter(function(k){ return D.owned[k] && BY_ID[k] && BY_ID[k].price; });
+    return 'GNSK-' + b64e(JSON.stringify({ p:D.points, e:D.earned, o:paid, w:D.wear, s:D.skin, h:D.hair }));
+  }
+  function useCode(raw){
+    var s = String(raw || '').trim().replace(/^GNSK-/i, '').replace(/\s+/g, '');
+    var d; try { d = JSON.parse(b64d(s)); } catch(e){ return false; }
+    if (!d || typeof d.p !== 'number' || !Array.isArray(d.o)) return false;
+    var f = fresh();
+    d.o.forEach(function(k){ if (BY_ID[k]) f.owned[k] = true; });
+    localStorage.setItem(KEY, JSON.stringify({ v:1, points:d.p, earned:d.e || d.p, owned:f.owned, wear:d.w || f.wear, skin:d.s, hair:d.h }));
+    D = load(); save(); renderAll(); paintCount(); return true;
+  }
+  function saveBox(){
+    var sec = document.getElementById('avatar'); if (!sec || document.getElementById('pp-save')) return;
+    var box = document.createElement('div'); box.className = 'pp-save'; box.id = 'pp-save';
+    box.innerHTML = '<h3>Keep your points and avatar</h3>' +
+      '<p>Your Powers Points and avatar are saved on this device. To move them to the GNS Kids app or another phone or tablet, copy your save code and enter it there. Ask a grown-up to help!</p>' +
+      '<div class="pp-row"><button class="btn" type="button" id="pp-show">Show my save code</button></div>' +
+      '<div id="pp-codebox" hidden><textarea id="pp-code" readonly rows="3" aria-label="Your save code"></textarea>' +
+      '<div class="pp-row"><button class="btn" type="button" id="pp-copy">Copy code</button><span id="pp-copied" role="status" aria-live="polite"></span></div></div>' +
+      '<label for="pp-in" class="pp-label">Have a save code? Enter it here:</label>' +
+      '<textarea id="pp-in" rows="2" placeholder="GNSK-..."></textarea>' +
+      '<div class="pp-row"><button class="btn" type="button" id="pp-load">Load my save</button><span id="pp-msg" role="status" aria-live="polite"></span></div>';
+    sec.appendChild(box);
+    var $ = function(id){ return document.getElementById(id); };
+    $('pp-show').onclick = function(){ $('pp-code').value = makeCode(); $('pp-codebox').hidden = false; $('pp-code').select(); };
+    $('pp-copy').onclick = function(){
+      var v = $('pp-code').value, done = function(){ $('pp-copied').textContent = 'Copied!'; };
+      try { navigator.clipboard.writeText(v).then(done, function(){ $('pp-code').select(); $('pp-copied').textContent = 'Press and hold to copy.'; }); }
+      catch(e){ $('pp-code').select(); $('pp-copied').textContent = 'Press and hold to copy.'; }
+    };
+    $('pp-load').onclick = function(){
+      var ok = false; try { ok = useCode($('pp-in').value); } catch(e){}
+      $('pp-msg').textContent = ok ? 'Your points and avatar are back!' : "That code didn't work. Check that you copied all of it.";
+      if (ok) $('pp-in').value = '';
+    };
+    var st = document.createElement('style');
+    st.textContent = '.pp-save{margin-top:20px;background:var(--surface);border:2px solid var(--line);border-radius:18px;padding:16px 18px;display:grid;gap:10px;max-width:720px}' +
+      '.pp-save h3{font-family:var(--display);font-weight:700;margin:0;font-size:1.2rem}.pp-save p{margin:0;color:var(--muted)}' +
+      '.pp-save textarea{font:inherit;font-size:.9rem;width:100%;border:2px solid var(--line);border-radius:10px;padding:8px 10px;background:var(--bg);color:var(--fg);word-break:break-all;resize:vertical}' +
+      '.pp-row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.pp-row .btn{margin-top:0}.pp-label{font-weight:700}#pp-msg,#pp-copied{font-weight:700}';
+    document.head.appendChild(st);
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', saveBox); else saveBox();
+
   window.PowersPoints = { award: award, miss: miss, points: function(){ return D.points; } };
   function init(){
     paintCount(false); renderAll();

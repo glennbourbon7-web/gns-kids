@@ -17,4 +17,4 @@ Win games to earn Powers Points from Richard Powers, then spend them in the **My
 | GNS Word Search | Find all 10 words: 40 |
 | GNS Crossword | Solve it without "Show answers": 60 |
 
-Points and clothes are saved in the player's browser, so they stay on the device they were earned on. The code lives in `powers-points.js`.
+Points and clothes are saved in the player's browser. The site asks the browser to keep that save permanently, and the **Keep your points and avatar** box under My Avatar gives each player a save code to move their points and avatar to the GNS Kids app or another device. The code lives in `powers-points.js`.
