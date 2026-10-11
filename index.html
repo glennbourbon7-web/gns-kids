@@ -100,6 +100,11 @@ footer .wrap{padding-block:20px;display:flex;justify-content:space-between;gap:1
 .feedback.good{background:#e3f4e8;color:#16602d}
 .feedback.bad{background:#fde3e0;color:#8c1414}
 .big-score{font-family:var(--display);font-weight:700;font-size:3rem;line-height:1;font-variant-numeric:tabular-nums}
+.gart .art-pair{display:flex;align-items:flex-end;gap:6px;padding-top:18px}
+.gart .art-pair img{width:auto;height:130px;border:0;border-radius:0;background:none}
+.gart .art-pair img.small{height:82px}
+.gart.river-art{background:linear-gradient(180deg,#9fd8ff 0 34%,#3f8ac4 34% 44%,#5d9c40 44%)}
+.gart.kitchen-art{background:linear-gradient(180deg,#b31212 0 70%,#c9a77c 70%)}
 @media (max-width:760px){.games{grid-template-columns:1fr}.scene img{width:56px;height:56px}}
 @media (prefers-reduced-motion:reduce){.bar i{transition:none}}
 
@@ -275,6 +280,22 @@ a.btn{text-decoration:none;display:inline-block}
             <button class="btn" id="play-desk">Play</button>
           </div>
         </article>
+        <article class="gcard">
+          <div class="gart river-art"><div class="art-pair" id="art-beaver"></div></div>
+          <div class="gbody">
+            <h3>Beaver Trapping</h3>
+            <p>The beavers are chewing up the riverbank! Help Richard Powers trap them as they pop out of their dens. Grab the golden beavers, and don't trap Glenn Bourbon by mistake.</p>
+            <button class="btn" id="play-beaver">Play</button>
+          </div>
+        </article>
+        <article class="gcard">
+          <div class="gart kitchen-art"><div class="art-pair" id="art-cookie"></div></div>
+          <div class="gbody">
+            <h3>Big Ole' Red Cookie</h3>
+            <p>Play as Glenn Bourbon and bake a Big Ole' Red Cookie. Catch the ingredients, stir the dough, and pull it from the oven at just the right second.</p>
+            <button class="btn" id="play-cookie">Play</button>
+          </div>
+        </article>
       </div>
     </section>
     <section id="music"><h2>Music</h2>
@@ -355,7 +376,7 @@ a.btn{text-decoration:none;display:inline-block}
   var modal = document.getElementById('modal'), mbody = document.getElementById('mbody'), mtitle = document.getElementById('mtitle');
   var lastBtn = null;
   function open(title, btn, wide){ lastBtn = btn; mtitle.textContent = title; modal.querySelector('.panel').classList.toggle('wide', !!wide); modal.hidden = false; document.body.style.overflow = 'hidden'; }
-  function close(){ modal.hidden = true; document.body.style.overflow = ''; mbody.innerHTML = ''; if (lastBtn) lastBtn.focus(); }
+  function close(){ if (window.GNS && window.GNS.onClose){ try { window.GNS.onClose(); } catch(e){} window.GNS.onClose = null; } modal.hidden = true; document.body.style.overflow = ''; mbody.innerHTML = ''; if (lastBtn) lastBtn.focus(); }
   document.getElementById('mclose').onclick = close;
   modal.addEventListener('click', function(e){ if (e.target === modal) close(); });
   document.addEventListener('keydown', function(e){ if (e.key === 'Escape' && !modal.hidden) close(); });
@@ -753,5 +774,6 @@ document.addEventListener('play',function(e){document.querySelectorAll('audio').
 try{document.getElementById('today').textContent=new Date().toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'})}catch(e){}
 </script>
 
+<script src="arcade-games.js"></script>
 </body>
 </html>
