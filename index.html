@@ -303,6 +303,63 @@ a.btn{text-decoration:none;display:inline-block}
 .av-item.locked .av-mini svg{opacity:.55;filter:grayscale(.35)}
 .av-lock{position:absolute;top:6px;right:6px;background:var(--gold);color:var(--gold-ink);font-family:var(--display);font-weight:700;font-size:.85rem;border-radius:999px;padding:2px 9px}
 @media (max-width:760px){.av{grid-template-columns:1fr}.pp-pill{padding:6px 11px;font-size:.9rem}.pp-pill .pp-word{display:none}.av-items{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+/* GNS Kids Live */
+#kids-live{display:grid;gap:16px}
+.kl-head{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.kl-head h2{margin:0}
+.kl-head h2::before{display:none}
+.kl-head p{margin:0;color:var(--muted);flex-basis:100%}
+.kl-onair,.kl-badge{display:inline-flex;align-items:center;gap:7px;font-family:var(--display);font-weight:700;letter-spacing:.08em;background:var(--brand-2);color:#fff;border-radius:999px;padding:4px 12px;font-size:.9rem}
+.kl-onair i,.kl-badge i{width:9px;height:9px;border-radius:50%;background:#fff;animation:klBlink 1.2s ease-in-out infinite}
+@keyframes klBlink{50%{opacity:.25}}
+.kl-tv{max-width:960px;width:100%;background:#1b0b0b;border-radius:24px;padding:10px;box-shadow:0 0 0 4px var(--brand),0 18px 40px rgba(147,0,0,.25)}
+.kl-screen{position:relative;aspect-ratio:16/9;max-width:100%;border-radius:16px;overflow:hidden;background:#000}
+.kl-screen video{width:100%;height:100%;object-fit:contain;display:block;background:#000;cursor:pointer}
+.kl-bug{position:absolute;right:12px;top:12px;width:clamp(36px,7%,58px);height:auto;border-radius:50%;opacity:.9;pointer-events:none}
+.kl-badge{position:absolute;left:12px;top:12px;font-size:.75rem;padding:3px 10px;pointer-events:none}
+.kl-start{position:absolute;inset:0;display:grid;place-content:center;justify-items:center;gap:12px;border:0;cursor:pointer;color:#fff;background:radial-gradient(circle at 50% 45%,rgba(196,58,58,.55),rgba(27,11,11,.85) 70%);font-family:var(--display);font-weight:700;font-size:clamp(1.1rem,3vw,1.6rem)}
+.kl-start img{width:clamp(80px,18%,140px);height:auto;border-radius:50%;animation:klBob 1.4s ease-in-out infinite alternate}
+.kl-start span{background:#fff;color:var(--brand);border-radius:999px;padding:10px 22px}
+@keyframes klBob{to{transform:translateY(-8px) rotate(-3deg)}}
+.kl-pop{position:absolute;right:14px;bottom:14px;display:flex;gap:10px;align-items:center;max-width:min(78%,360px);background:#fff;color:#2a1615;border-radius:16px;padding:8px 14px 8px 8px;box-shadow:0 10px 30px rgba(0,0,0,.4);animation:klPop .45s cubic-bezier(.2,1.5,.4,1)}
+.kl-pop img{width:96px;aspect-ratio:16/9;object-fit:cover;border-radius:10px;flex:none}
+.kl-pop div{display:grid;min-width:0;line-height:1.2}
+.kl-pop b{font-family:var(--display);font-weight:700;text-transform:uppercase;letter-spacing:.08em;font-size:.72rem;color:var(--brand-2)}
+.kl-pop strong{font-family:var(--display);font-weight:700;font-size:1rem}
+.kl-pop span{font-size:.8rem;font-weight:700;color:#7d6461;font-variant-numeric:tabular-nums}
+@keyframes klPop{from{transform:translateY(30px) scale(.8);opacity:0}}
+.kl-bar{display:flex;align-items:center;gap:8px;padding:10px 4px 2px;color:#fff}
+.kl-ctl{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-width:40px;height:40px;border:0;border-radius:999px;background:rgba(255,255,255,.12);color:#fff;cursor:pointer;padding:0 10px;font-family:var(--display);font-weight:600}
+.kl-ctl:hover{background:rgba(255,255,255,.22)}
+.kl-ctl svg{width:20px;height:20px}
+.kl-skip{background:#ffd84d;color:#2a1615}
+.kl-skip:hover{background:#ffe27a}
+.kl-prog{flex:1;min-width:40px;height:8px;border-radius:99px;background:rgba(255,255,255,.18);overflow:hidden}
+.kl-prog i{display:block;height:100%;width:0;background:linear-gradient(90deg,#ffd84d,#ff8a4a);border-radius:99px}
+.kl-time{font-size:.85rem;font-weight:700;font-variant-numeric:tabular-nums;opacity:.85;white-space:nowrap}
+.kl-info{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:16px;max-width:960px}
+.kl-now{background:var(--surface);border:2px solid var(--line);border-radius:20px;padding:16px 18px;display:grid;gap:6px;align-content:start;justify-items:start}
+.kl-eyebrow{font-family:var(--display);font-weight:600;font-size:.8rem;letter-spacing:.1em;text-transform:uppercase;color:var(--brand-2)}
+.kl-show{display:inline-block;font-family:var(--display);font-weight:700;font-size:.75rem;letter-spacing:.06em;text-transform:uppercase;color:#fff;background:var(--brand-2);border-radius:999px;padding:2px 10px}
+.kl-now h3{margin:0;font-family:var(--display);font-weight:700;font-size:clamp(1.4rem,3vw,1.9rem);line-height:1.1;text-wrap:balance}
+.kl-now p{margin:0;color:var(--muted)}
+.kl-next{position:relative;display:flex;gap:12px;align-items:center;background:linear-gradient(135deg,#ffd84d,#ffb347);color:#2a1615;border-radius:20px;padding:22px 16px 16px;transform:rotate(-1deg);box-shadow:0 8px 0 rgba(147,0,0,.18)}
+.kl-sticker{position:absolute;top:-12px;left:14px;font-family:var(--display);font-weight:700;font-size:1rem;background:var(--brand);color:#fff;border-radius:10px;padding:3px 12px;transform:rotate(-4deg);box-shadow:0 3px 0 rgba(0,0,0,.2)}
+.kl-next img{width:42%;max-width:180px;aspect-ratio:16/9;object-fit:cover;border-radius:12px;border:3px solid #fff;flex:none}
+.kl-next-text{display:grid;gap:4px;min-width:0;justify-items:start}
+.kl-next-text strong{font-family:var(--display);font-weight:700;font-size:1.25rem;line-height:1.15}
+.kl-next-when{font-weight:800;font-size:.9rem;font-variant-numeric:tabular-nums}
+.kl-line-h{margin:6px 0 0;font-family:var(--display);font-weight:700;font-size:1.3rem}
+.kl-line{list-style:none;margin:0;padding:4px 2px 12px;display:grid;grid-auto-flow:column;grid-auto-columns:minmax(170px,210px);gap:12px;overflow-x:auto;max-width:100%;scrollbar-width:thin}
+.kl-card{position:relative;background:var(--surface);border:2px solid var(--line);border-radius:16px;padding:8px 8px 12px;display:grid;gap:5px;justify-items:start;min-width:0}
+.kl-card img{width:100%;aspect-ratio:16/9;object-fit:cover;border-radius:10px;display:block}
+.kl-card strong{font-family:var(--display);font-weight:700;font-size:1rem;line-height:1.15}
+.kl-card.on{border-color:var(--brand-2);box-shadow:0 0 0 3px rgba(179,18,18,.25)}
+.kl-tag{position:absolute;top:14px;left:14px;font-family:var(--display);font-weight:700;font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;background:rgba(0,0,0,.7);color:#fff;border-radius:999px;padding:2px 9px}
+.kl-card.on .kl-tag{background:var(--brand-2)}
+@media (max-width:760px){.kl-info{grid-template-columns:minmax(0,1fr)}.kl-pop img{width:72px}.kl-time{display:none}.kl-skip{padding:0 12px}}
+@media (prefers-reduced-motion:reduce){.kl-onair i,.kl-badge i,.kl-start img,.kl-pop{animation:none}}
 </style>
 </head>
 <body>
@@ -367,43 +424,131 @@ a.btn{text-decoration:none;display:inline-block}
       </div>
     </section>
     <section id="kids-live" aria-labelledby="kids-live-heading">
-      <h2 id="kids-live-heading">GNS Kids Live</h2>
-      <p>Watch The Powers Rap and Mighty Orbots in a repeating video channel.</p>
-      <div style="max-width:900px;background:#101629;color:#fff;border-radius:18px;padding:16px;margin:14px 0 24px">
-        <div style="font-weight:800;color:#ffdb64;margin-bottom:10px">● GNS KIDS LIVE · VIDEO ROTATION</div>
-        <video id="kids-live-player" controls playsinline preload="metadata" poster="media/powers-rap-poster.jpg" style="width:100%;aspect-ratio:16/9;background:#000;border-radius:10px"></video>
-        <p id="kids-live-now" aria-live="polite" style="font-weight:700;margin:12px 0 5px"></p>
-        <p id="kids-live-next" style="margin:0 0 8px;color:#d6e0f4"></p>
-        <button type="button" id="kids-live-start" style="padding:10px 18px;border:0;border-radius:9px;background:#ffdb64;color:#14182a;font-weight:800;cursor:pointer">▶ Watch GNS Kids Live</button>
-        <button type="button" id="kids-live-sync" style="padding:10px 14px;border:1px solid #fff;border-radius:9px;background:transparent;color:#fff;font-weight:700;cursor:pointer;margin-left:6px">↻ Restart Rotation</button>
+      <div class="kl-head">
+        <span class="kl-onair"><i></i>LIVE</span>
+        <h2 id="kids-live-heading">GNS Kids Live</h2>
+        <p>Cartoons, music and more, playing all day long.</p>
       </div>
+      <div class="kl-tv">
+        <div class="kl-screen" id="kl-screen">
+          <video id="kl-video" playsinline preload="metadata"></video>
+          <img class="kl-bug" src="logo.png" alt="">
+          <span class="kl-badge" aria-hidden="true"><i></i>LIVE</span>
+          <button type="button" class="kl-start" id="kl-start"><img src="logo.png" alt=""><span>Watch GNS Kids Live</span></button>
+          <div class="kl-pop" id="kl-pop" hidden aria-live="polite">
+            <img id="kl-pop-img" alt="">
+            <div><b>Up next</b><strong id="kl-pop-title"></strong><span id="kl-pop-time"></span></div>
+          </div>
+        </div>
+        <div class="kl-bar">
+          <button type="button" class="kl-ctl" id="kl-play" aria-label="Play"></button>
+          <button type="button" class="kl-ctl" id="kl-mute" aria-label="Mute"></button>
+          <div class="kl-prog" aria-hidden="true"><i id="kl-fill"></i></div>
+          <span class="kl-time" id="kl-time">0:00</span>
+          <button type="button" class="kl-ctl kl-skip" id="kl-skip">Next show <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5l9 7-9 7zM16 5h3v14h-3z" fill="currentColor"/></svg></button>
+          <button type="button" class="kl-ctl" id="kl-full" aria-label="Full screen"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M4 9V4h5M15 4h5v5M20 15v5h-5M9 20H4v-5"/></svg></button>
+        </div>
+      </div>
+      <div class="kl-info">
+        <div class="kl-now">
+          <span class="kl-eyebrow">Now playing</span>
+          <span class="kl-show" id="kl-now-show"></span>
+          <h3 id="kl-now-title"></h3>
+          <p id="kl-now-blurb"></p>
+        </div>
+        <div class="kl-next">
+          <span class="kl-sticker">Up next!</span>
+          <img id="kl-next-img" alt="">
+          <div class="kl-next-text">
+            <span class="kl-show" id="kl-next-show"></span>
+            <strong id="kl-next-title"></strong>
+            <span class="kl-next-when" id="kl-next-when"></span>
+          </div>
+        </div>
+      </div>
+      <h3 class="kl-line-h">The lineup</h3>
+      <ol class="kl-line" id="kl-line"></ol>
     </section>
     <script>
-    document.addEventListener('DOMContentLoaded',function(){
-      const video=document.getElementById('kids-live-player');
-      const now=document.getElementById('kids-live-now'),next=document.getElementById('kids-live-next');
-      const start=document.getElementById('kids-live-start'),reset=document.getElementById('kids-live-sync');
-      if(!video)return;
-      const playlist=[
-        {title:'The Powers Rap',src:'media/powers-rap.mp4'},
-        {title:'Mighty Orbots — Episode 1',src:'https://archive.org/download/mighty-orbots-1/TITLE_03_mpeg4.mp4'},
-        {title:'Mighty Orbots — Episode 2',src:'orbots-episode-2%202.mp4'}
+    (function(){
+      var LINEUP = [
+        { show: 'GNS Kids', title: 'The Powers Rap', src: 'media/powers-rap.mp4', img: 'media/powers-rap-poster.jpg', blurb: 'President Justin Powers raps about being kind, sharing and treating everybody right.', color: '#b31212' },
+        { show: 'Superman', title: 'The Mad Scientist', src: 'media/live/superman-mad-scientist.mp4', img: 'media/live/superman-mad-scientist.jpg', blurb: 'A mad scientist threatens the city with his Electrothanasia Ray, and only Superman can stop it. (1941)', color: '#1f5fc4' },
+        { show: 'Mighty Orbots', title: 'Episode 1', src: 'https://archive.org/download/mighty-orbots-1/TITLE_03_mpeg4.mp4', img: 'media/live/mighty-orbots-2.jpg', blurb: 'Rob and his team of robots combine into the Mighty Orbots to protect the galaxy.', color: '#e0731c' },
+        { show: 'Superman', title: 'The Mechanical Monsters', src: 'media/live/superman-mechanical-monsters.mp4', img: 'media/live/superman-mechanical-monsters.jpg', blurb: 'Giant flying robots are robbing banks all over town. Superman takes them on. (1941)', color: '#1f5fc4' },
+        { show: 'Mighty Orbots', title: 'Episode 2', src: 'media/live/mighty-orbots-2.mp4', img: 'media/live/mighty-orbots-2.jpg', blurb: 'The Orbots are back for another adventure in space.', color: '#e0731c' },
+        { show: 'Superman', title: 'Electric Earthquake', src: 'media/live/superman-electric-earthquake.mp4', img: 'media/live/superman-electric-earthquake.jpg', blurb: 'An inventor shakes Manhattan with man-made earthquakes. Superman to the rescue! (1942)', color: '#1f5fc4' }
       ];
-      let index=0;
-      function show(i,play){
-        index=(i+playlist.length)%playlist.length;
-        video.src=playlist[index].src;
-        now.textContent='NOW PLAYING: '+playlist[index].title;
-        next.textContent='Up next: '+playlist[(index+1)%playlist.length].title;
-        video.load();
-        if(play)video.play().catch(()=>{start.textContent='▶ Tap to play';});
+      var KEY = 'gnsk-live-spot';
+      var $ = function(id){ return document.getElementById(id); };
+      var v = $('kl-video'), screen = $('kl-screen');
+      var IC = {
+        play: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15l12.5-7.5z" fill="currentColor"/></svg>',
+        pause: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.5 4.5h4v15h-4zM13.5 4.5h4v15h-4z" fill="currentColor"/></svg>',
+        vol: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9.5h3.5L12 5v14l-4.5-4.5H4z" fill="currentColor"/><path d="M16 9a4 4 0 010 6M18.5 6.5a7.5 7.5 0 010 11"/></svg>',
+        mute: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9.5h3.5L12 5v14l-4.5-4.5H4z" fill="currentColor"/><path d="M16 9.5l5 5M21 9.5l-5 5"/></svg>'
+      };
+      var idx = 0, started = false;
+      try { var s = JSON.parse(localStorage.getItem(KEY) || 'null'); if (s && s.i >= 0 && s.i < LINEUP.length) { idx = s.i; v._resume = s.t || 0; } } catch (e) {}
+      function fmt(sec){ sec = Math.max(0, Math.round(sec || 0)); var m = Math.floor(sec / 60), x = sec % 60; return m + ':' + (x < 10 ? '0' : '') + x; }
+      function nxt(i){ return (i + 1) % LINEUP.length; }
+      function save(){ try { localStorage.setItem(KEY, JSON.stringify({ i: idx, t: v.currentTime || 0 })); } catch (e) {} }
+      function paint(){
+        var c = LINEUP[idx], n = LINEUP[nxt(idx)];
+        $('kl-now-show').textContent = c.show; $('kl-now-show').style.background = c.color;
+        $('kl-now-title').textContent = c.title; $('kl-now-blurb').textContent = c.blurb;
+        $('kl-next-show').textContent = n.show; $('kl-next-show').style.background = n.color;
+        $('kl-next-title').textContent = n.title; $('kl-next-img').src = n.img;
+        $('kl-pop-title').textContent = n.show + ': ' + n.title; $('kl-pop-img').src = n.img;
+        var line = $('kl-line'); line.innerHTML = '';
+        for (var k = 0; k < LINEUP.length; k++){
+          var j = (idx + k) % LINEUP.length, it = LINEUP[j];
+          var li = document.createElement('li'); li.className = 'kl-card' + (k === 0 ? ' on' : '');
+          var im = document.createElement('img'); im.src = it.img; im.alt = ''; im.loading = 'lazy'; li.appendChild(im);
+          var tag = document.createElement('span'); tag.className = 'kl-tag'; tag.textContent = k === 0 ? 'On now' : k === 1 ? 'Next' : 'Later'; li.appendChild(tag);
+          var sh = document.createElement('span'); sh.className = 'kl-show'; sh.style.background = it.color; sh.textContent = it.show; li.appendChild(sh);
+          var tt = document.createElement('strong'); tt.textContent = it.title; li.appendChild(tt);
+          line.appendChild(li);
+        }
+        timing();
       }
-      video.addEventListener('ended',()=>show(index+1,true));
-      video.addEventListener('error',()=>{now.textContent='Could not load '+playlist[index].title;start.textContent='▶ Try next video';});
-      start.addEventListener('click',()=>{if(video.error)show(index+1,true);else video.play().catch(()=>{});});
-      reset.addEventListener('click',()=>show(0,true));
-      show(0,false);
-    });
+      function timing(){
+        var left = (v.duration || 0) - (v.currentTime || 0);
+        $('kl-next-when').textContent = v.duration ? 'Starts in ' + fmt(left) : 'Starts after this show';
+        $('kl-pop-time').textContent = 'in ' + fmt(left);
+        $('kl-pop').hidden = !(started && v.duration && left <= 20 && left > 0.3);
+        $('kl-fill').style.width = v.duration ? (v.currentTime / v.duration * 100) + '%' : '0%';
+        $('kl-time').textContent = fmt(v.currentTime) + (v.duration ? ' / ' + fmt(v.duration) : '');
+      }
+      function load(i, play){
+        idx = (i + LINEUP.length) % LINEUP.length;
+        v.src = LINEUP[idx].src; v.poster = LINEUP[idx].img;
+        paint();
+        if (play) { var p = v.play(); if (p && p.catch) p.catch(function(){ $('kl-start').hidden = false; }); }
+      }
+      function paintBtns(){
+        $('kl-play').innerHTML = v.paused ? IC.play : IC.pause; $('kl-play').setAttribute('aria-label', v.paused ? 'Play' : 'Pause');
+        $('kl-mute').innerHTML = v.muted ? IC.mute : IC.vol; $('kl-mute').setAttribute('aria-label', v.muted ? 'Unmute' : 'Mute');
+      }
+      v.addEventListener('loadedmetadata', function(){ if (v._resume && v._resume < v.duration - 5) v.currentTime = v._resume; v._resume = 0; timing(); });
+      v.addEventListener('timeupdate', function(){ timing(); if (Math.floor(v.currentTime) % 5 === 0) save(); });
+      v.addEventListener('ended', function(){ load(nxt(idx), true); save(); });
+      v.addEventListener('error', function(){ if (started) setTimeout(function(){ load(nxt(idx), true); }, 800); });   // skip a show that won't load
+      ['play', 'pause', 'volumechange'].forEach(function(e){ v.addEventListener(e, paintBtns); });
+      v.addEventListener('play', function(){ started = true; $('kl-start').hidden = true; screen.classList.add('playing'); });
+      $('kl-start').onclick = function(){ started = true; v.muted = false; var p = v.play(); if (p && p.catch) p.catch(function(){}); };
+      $('kl-play').onclick = function(){ if (v.paused) { started = true; v.play().catch(function(){}); } else v.pause(); };
+      $('kl-mute').onclick = function(){ v.muted = !v.muted; };
+      $('kl-skip').onclick = function(){ started = true; load(nxt(idx), true); save(); };
+      $('kl-full').onclick = function(){
+        var req = screen.requestFullscreen || screen.webkitRequestFullscreen;
+        if (document.fullscreenElement || document.webkitFullscreenElement) { (document.exitFullscreen || document.webkitExitFullscreen).call(document); return; }
+        if (req) { var r = req.call(screen); if (r && r.catch) r.catch(function(){}); } else if (v.webkitEnterFullscreen) v.webkitEnterFullscreen();
+      };
+      v.addEventListener('click', function(){ if (started) $('kl-play').onclick(); });
+      window.addEventListener('pagehide', save);
+      load(idx, false); paintBtns();
+    })();
     </script>
     <section id="videos"><h2>Videos</h2>
       <div class="vids">
