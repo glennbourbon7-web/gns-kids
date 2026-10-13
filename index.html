@@ -367,71 +367,43 @@ a.btn{text-decoration:none;display:inline-block}
       </div>
     </section>
     <section id="kids-live" aria-labelledby="kids-live-heading">
-<h2 id="kids-live-heading">GNS Kids Live</h2>
-<p>One synchronized 24/7 channel: The Powers Rap and all 13 Mighty Orbots episodes, together in the same broadcast rotation.</p>
-<div style="max-width:900px;background:#101629;color:#fff;border-radius:18px;padding:16px;margin:14px 0 24px">
-<div style="font-weight:800;color:#ffdb64;margin-bottom:10px">● GNS KIDS LIVE · 24/7 CHANNEL</div>
-<div style="position:relative;width:100%;aspect-ratio:16/9;background:#000;border-radius:10px;overflow:hidden">
-<video id="kids-live-player" controls playsinline preload="metadata" poster="media/powers-rap-poster.jpg" style="width:100%;height:100%;display:none"></video>
-<div id="kids-live-youtube" style="width:100%;height:100%;display:none"></div>
-</div>
-<p id="kids-live-now" aria-live="polite" style="font-weight:700;margin:12px 0 5px">Loading the broadcast schedule…</p>
-<p id="kids-live-next" style="margin:0 0 8px;color:#d6e0f4"></p>
-<p id="kids-live-clock" style="margin:0 0 12px;color:#d6e0f4;font-size:13px"></p>
-<button type="button" id="kids-live-start" style="padding:10px 18px;border:0;border-radius:9px;background:#ffdb64;color:#14182a;font-weight:800;cursor:pointer">▶ Watch GNS Kids Live</button>
-<button type="button" id="kids-live-sync" style="padding:10px 14px;border:1px solid #fff;border-radius:9px;background:transparent;color:#fff;font-weight:700;cursor:pointer;margin-left:6px">↻ Jump to Live</button>
-<p style="font-size:12px;color:#c9d3e8;margin-top:10px">This is a shared-clock web channel. Tap Watch to enable sound. YouTube's embedding and autoplay restrictions can affect individual episodes.</p>
-</div></section>
-<script>
-document.addEventListener('DOMContentLoaded',function(){
-const video=document.getElementById('kids-live-player'),ytBox=document.getElementById('kids-live-youtube'),start=document.getElementById('kids-live-start'),sync=document.getElementById('kids-live-sync');
-const nowEl=document.getElementById('kids-live-now'),nextEl=document.getElementById('kids-live-next'),clockEl=document.getElementById('kids-live-clock');
-if(!video||!ytBox)return;
-const titles=['Magnetic Menace','The Wish World','Trapped on the Prehistoric Planet','The Dremloks',"Devil's Asteroid",'Raid on the Stellar Queen','The Jewel of Targon','The Phoenix Factor','Leviathan','The Cosmic Circus','A Tale of Two Thieves','Operation Eclipse','The Invasion of the Shadow Star'];
-// Approximate episode runtimes establish the channel's shared schedule.
-const durations=[1412,1411,1387,1429,1418,1417,1332,1333,1324,1324,1324,1323,1335];
-const lineup=[{title:'The Powers Rap',seconds:131,kind:'local'}].concat(titles.map((title,i)=>({title:'Mighty Orbots — Episode '+(i+1)+': '+title,seconds:durations[i],kind:'youtube',playlistIndex:i})));
-const cycle=lineup.reduce((sum,item)=>sum+item.seconds,0),epoch=Date.UTC(2026,9,13,0,0,0);
-let yt=null,ytReady=false,active=-1,started=false;
-function schedule(){let t=((Date.now()-epoch)/1000%cycle+cycle)%cycle;for(let i=0;i<lineup.length;i++){if(t<lineup[i].seconds)return {index:i,offset:t,remaining:lineup[i].seconds-t};t-=lineup[i].seconds;}return {index:0,offset:0,remaining:lineup[0].seconds};}
-function fmt(t){t=Math.max(0,Math.floor(t));return Math.floor(t/60)+':'+String(t%60).padStart(2,'0');}
-function youtubeReady(){return ytReady&&yt&&typeof yt.loadPlaylist==='function';}
-function load(force){
-const p=schedule(),item=lineup[p.index];
-nowEl.textContent='ON AIR: '+item.title;
-nextEl.textContent='Up next: '+lineup[(p.index+1)%lineup.length].title;
-clockEl.textContent='Time remaining: '+fmt(p.remaining)+' · Shared 24/7 broadcast';
-if(!force&&active===p.index){
- if(item.kind==='local'&&video.readyState>=1&&video.seekable.length&&Math.abs(video.currentTime-p.offset)>6){try{video.currentTime=p.offset;}catch(e){}}
- if(item.kind==='youtube'&&youtubeReady()&&typeof yt.getCurrentTime==='function'&&Math.abs(yt.getCurrentTime()-p.offset)>8){try{yt.seekTo(p.offset,true);}catch(e){}}
- return;
-}
-active=p.index;
-if(item.kind==='local'){
- if(youtubeReady())yt.pauseVideo();
- ytBox.style.display='none';video.style.display='block';video.src='media/powers-rap.mp4';video.load();
- if(started)video.play().catch(()=>{start.textContent='▶ Tap to resume';});
-}else{
- video.pause();video.style.display='none';ytBox.style.display='block';
- if(youtubeReady()){
-   // YouTube IFrame API plays the selected episode in the supplied playlist.
-   yt.loadPlaylist({listType:'playlist',list:'PLLhOnau-tupRBcnHhplhDPzds6UR8rJd2',index:item.playlistIndex,startSeconds:Math.floor(p.offset)});
-   if(!started)yt.pauseVideo();
- }else{start.textContent='▶ Watch GNS Kids Live';}
-}
-}
-video.addEventListener('loadedmetadata',()=>{const p=schedule();if(p.index===0&&video.seekable.length){try{video.currentTime=p.offset;}catch(e){}}if(started&&p.index===0)video.play().catch(()=>{});});
-video.addEventListener('ended',()=>load(true));
-start.addEventListener('click',()=>{started=true;if(active===schedule().index&&lineup[active].kind==='youtube'&&youtubeReady()){yt.playVideo();}else if(active===0){video.play().catch(()=>{});}else{load(true);}start.textContent='▶ Resume Live';});
-sync.addEventListener('click',()=>{started=true;load(true);});
-document.addEventListener('visibilitychange',()=>{if(!document.hidden)load(false);});
-window.onYouTubeIframeAPIReady=function(){
- yt=new YT.Player('kids-live-youtube',{width:'100%',height:'100%',host:'https://www.youtube.com',playerVars:{playsinline:1,rel:0,origin:location.origin,enablejsapi:1},events:{onReady:function(){ytReady=true;const frame=yt.getIframe();frame.setAttribute('referrerpolicy','strict-origin-when-cross-origin');frame.setAttribute('allow','autoplay; encrypted-media; picture-in-picture');frame.style.width='100%';frame.style.height='100%';load(true);},onError:function(e){start.textContent='Episode blocked by YouTube (error '+e.data+')';clockEl.textContent='YouTube cannot play this episode here. Open the official playlist on YouTube to watch.';},onAutoplayBlocked:function(){start.textContent='▶ Tap to enable playback';},onStateChange:function(e){if(e.data===YT.PlayerState.ENDED)load(true);}}});
-};
-const script=document.createElement('script');script.src='https://www.youtube.com/iframe_api';document.head.appendChild(script);
-load(true);setInterval(()=>load(false),3000);
-});
-</script>
+      <h2 id="kids-live-heading">GNS Kids Live</h2>
+      <p>Watch The Powers Rap and Mighty Orbots in a repeating video channel.</p>
+      <div style="max-width:900px;background:#101629;color:#fff;border-radius:18px;padding:16px;margin:14px 0 24px">
+        <div style="font-weight:800;color:#ffdb64;margin-bottom:10px">● GNS KIDS LIVE · VIDEO ROTATION</div>
+        <video id="kids-live-player" controls playsinline preload="metadata" poster="media/powers-rap-poster.jpg" style="width:100%;aspect-ratio:16/9;background:#000;border-radius:10px"></video>
+        <p id="kids-live-now" aria-live="polite" style="font-weight:700;margin:12px 0 5px"></p>
+        <p id="kids-live-next" style="margin:0 0 8px;color:#d6e0f4"></p>
+        <button type="button" id="kids-live-start" style="padding:10px 18px;border:0;border-radius:9px;background:#ffdb64;color:#14182a;font-weight:800;cursor:pointer">▶ Watch GNS Kids Live</button>
+        <button type="button" id="kids-live-sync" style="padding:10px 14px;border:1px solid #fff;border-radius:9px;background:transparent;color:#fff;font-weight:700;cursor:pointer;margin-left:6px">↻ Restart Rotation</button>
+      </div>
+    </section>
+    <script>
+    document.addEventListener('DOMContentLoaded',function(){
+      const video=document.getElementById('kids-live-player');
+      const now=document.getElementById('kids-live-now'),next=document.getElementById('kids-live-next');
+      const start=document.getElementById('kids-live-start'),reset=document.getElementById('kids-live-sync');
+      if(!video)return;
+      const playlist=[
+        {title:'The Powers Rap',src:'media/powers-rap.mp4'},
+        {title:'Mighty Orbots — Episode 1',src:'https://archive.org/download/mighty-orbots-1/TITLE_03_mpeg4.mp4'}
+      ];
+      let index=0;
+      function show(i,play){
+        index=(i+playlist.length)%playlist.length;
+        video.src=playlist[index].src;
+        now.textContent='NOW PLAYING: '+playlist[index].title;
+        next.textContent='Up next: '+playlist[(index+1)%playlist.length].title;
+        video.load();
+        if(play)video.play().catch(()=>{start.textContent='▶ Tap to play';});
+      }
+      video.addEventListener('ended',()=>show(index+1,true));
+      video.addEventListener('error',()=>{now.textContent='Could not load '+playlist[index].title;start.textContent='▶ Try next video';});
+      start.addEventListener('click',()=>{if(video.error)show(index+1,true);else video.play().catch(()=>{});});
+      reset.addEventListener('click',()=>show(0,true));
+      show(0,false);
+    });
+    </script>
     <section id="videos"><h2>Videos</h2>
       <div class="vids">
         <article class="vcard" id="vid-powers-rap">
