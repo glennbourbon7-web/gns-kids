@@ -368,35 +368,62 @@ a.btn{text-decoration:none;display:inline-block}
     </section>
     <section id="kids-live" aria-labelledby="kids-live-heading">
   <h2 id="kids-live-heading">GNS Kids Live</h2>
-  <p>Watch The Powers Rap and Mighty Orbots back-to-back in a repeating GNS Kids TV lineup.</p>
+  <p>A 24/7 TV schedule shared by everyone watching. Join the show already in progress!</p>
   <div style="max-width:900px;background:#101629;color:#fff;border-radius:18px;padding:16px;margin:14px 0 24px">
-    <div style="font-weight:800;color:#ffdb64;margin-bottom:10px">● GNS KIDS LIVE · CONTINUOUS PLAYLIST</div>
-    <video id="kids-live-player" controls playsinline preload="metadata" poster="media/powers-rap-poster.jpg" style="display:block;width:100%;aspect-ratio:16/9;background:#000;border-radius:10px"></video>
-    <p id="kids-live-now" aria-live="polite" style="font-weight:700;margin:12px 0 5px">Now playing: The Powers Rap</p>
-    <p id="kids-live-next" style="margin:0 0 12px;color:#d6e0f4">Up next: Mighty Orbots</p>
-    <button type="button" id="kids-live-start" style="padding:10px 18px;border:0;border-radius:9px;background:#ffdb64;color:#14182a;font-weight:800;cursor:pointer">▶ Start GNS Kids Live</button>
+    <div style="font-weight:800;color:#ffdb64;margin-bottom:10px">● GNS KIDS LIVE · 24/7 CHANNEL</div>
+    <video id="kids-live-player" controls playsinline preload="metadata" style="display:block;width:100%;aspect-ratio:16/9;background:#000;border-radius:10px"></video>
+    <p id="kids-live-now" aria-live="polite" style="font-weight:700;margin:12px 0 5px">Checking the broadcast schedule…</p>
+    <p id="kids-live-next" style="margin:0 0 8px;color:#d6e0f4"></p>
+    <p id="kids-live-clock" style="margin:0 0 12px;color:#d6e0f4;font-size:13px"></p>
+    <button type="button" id="kids-live-start" style="padding:10px 18px;border:0;border-radius:9px;background:#ffdb64;color:#14182a;font-weight:800;cursor:pointer">▶ Watch GNS Kids Live</button>
+    <button type="button" id="kids-live-sync" style="padding:10px 14px;border:1px solid #fff;border-radius:9px;background:transparent;color:#fff;font-weight:700;cursor:pointer;margin-left:6px">↻ Jump to Live</button>
+    <p style="font-size:12px;color:#c9d3e8;margin-top:10px">The schedule follows a shared clock. Playback may require one tap; video availability depends on the hosting provider.</p>
   </div>
 </section>
 <script>
 document.addEventListener('DOMContentLoaded',function(){
-  const v=document.getElementById('kids-live-player'),start=document.getElementById('kids-live-start');
-  if(!v||!start)return;
+  const video=document.getElementById('kids-live-player'),start=document.getElementById('kids-live-start'),sync=document.getElementById('kids-live-sync');
+  if(!video||!start||!sync)return;
+  // Fixed UTC epoch keeps the same position for all viewers, regardless of device timezone.
+  const epoch=Date.UTC(2026,9,13,0,0,0);
   const lineup=[
-    {title:'The Powers Rap',url:'media/powers-rap.mp4',poster:'media/powers-rap-poster.jpg'},
-    {title:'Mighty Orbots',url:'https://archive.org/download/mighty-orbots-1/TITLE_03_mpeg4.mp4',poster:''}
+    {title:'The Powers Rap',url:'media/powers-rap.mp4',poster:'media/powers-rap-poster.jpg',seconds:131},
+    {title:'Mighty Orbots — Episode 1',url:'https://archive.org/download/mighty-orbots-1/TITLE_03_mpeg4.mp4',poster:'',seconds:1432}
   ];
-  let n=0;
-  function load(i,autoplay){
-    n=i%lineup.length;const item=lineup[n];
-    v.src=item.url;v.poster=item.poster||'';v.load();
-    document.getElementById('kids-live-now').textContent='Now playing: '+item.title;
-    document.getElementById('kids-live-next').textContent='Up next: '+lineup[(n+1)%lineup.length].title;
-    if(autoplay)v.play().catch(()=>{start.textContent='▶ Continue GNS Kids Live';});
+  const cycle=lineup.reduce((total,item)=>total+item.seconds,0);
+  const nowEl=document.getElementById('kids-live-now'),nextEl=document.getElementById('kids-live-next'),clockEl=document.getElementById('kids-live-clock');
+  let current=-1,ready=false,playingRequested=false;
+  function position(){
+    let elapsed=((Date.now()-epoch)/1000%cycle+cycle)%cycle;
+    for(let i=0;i<lineup.length;i++){if(elapsed<lineup[i].seconds)return {index:i,offset:elapsed,remaining:lineup[i].seconds-elapsed};elapsed-=lineup[i].seconds;}
+    return {index:0,offset:0,remaining:lineup[0].seconds};
   }
-  start.addEventListener('click',()=>{if(!v.src)load(n,false);v.play().catch(()=>{});});
-  v.addEventListener('ended',()=>load(n+1,true));
-  v.addEventListener('error',()=>{start.textContent='Video unavailable — try again';});
-  load(0,false);
+  function format(t){t=Math.max(0,Math.floor(t));return Math.floor(t/60)+':'+String(t%60).padStart(2,'0');}
+  function apply(force){
+    const p=position(),item=lineup[p.index];
+    nowEl.textContent='ON AIR: '+item.title;
+    nextEl.textContent='Up next: '+lineup[(p.index+1)%lineup.length].title;
+    clockEl.textContent='Program time remaining: '+format(p.remaining)+' · Repeating 24/7';
+    if(force||current!==p.index){
+      current=p.index;ready=false;video.poster=item.poster||'';video.src=item.url;video.load();
+      start.textContent='▶ Watch GNS Kids Live';
+      return;
+    }
+    if(ready&&video.seekable.length&&Math.abs(video.currentTime-p.offset)>5){
+      try{video.currentTime=Math.min(p.offset,Math.max(0,(Number.isFinite(video.duration)?video.duration:item.seconds)-0.5));}catch(e){}
+    }
+  }
+  video.addEventListener('loadedmetadata',function(){
+    ready=true;const p=position();
+    if(video.seekable.length){try{video.currentTime=Math.min(p.offset,Math.max(0,video.duration-0.5));}catch(e){}}
+    if(playingRequested)video.play().catch(()=>{start.textContent='▶ Tap to resume live';});
+  });
+  video.addEventListener('ended',()=>apply(true));
+  video.addEventListener('error',()=>{start.textContent='Video unavailable — retry';});
+  start.addEventListener('click',()=>{playingRequested=true;apply(false);video.play().catch(()=>{start.textContent='▶ Tap to resume live';});});
+  sync.addEventListener('click',()=>{playingRequested=true;apply(true);});
+  document.addEventListener('visibilitychange',()=>{if(!document.hidden)apply(false);});
+  apply(true);setInterval(()=>apply(false),3000);
 });
 </script>
     <section id="videos"><h2>Videos</h2>
