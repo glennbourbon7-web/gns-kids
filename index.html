@@ -373,7 +373,7 @@ a.btn{text-decoration:none;display:inline-block}
 <div style="font-weight:800;color:#ffdb64;margin-bottom:10px">● GNS KIDS LIVE · 24/7 CHANNEL</div>
 <div style="position:relative;width:100%;aspect-ratio:16/9;background:#000;border-radius:10px;overflow:hidden">
 <video id="kids-live-player" controls playsinline preload="metadata" poster="media/powers-rap-poster.jpg" style="width:100%;height:100%;display:none"></video>
-<div id="kids-live-youtube" style="width:100%;height:100%;display:none"></div>
+<iframe id="kids-live-youtube" title="GNS Kids Live Mighty Orbots" referrerpolicy="strict-origin-when-cross-origin" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen style="width:100%;height:100%;display:none;border:0"></iframe>
 </div>
 <p id="kids-live-now" aria-live="polite" style="font-weight:700;margin:12px 0 5px">Loading the broadcast schedule…</p>
 <p id="kids-live-next" style="margin:0 0 8px;color:#d6e0f4"></p>
@@ -426,7 +426,7 @@ start.addEventListener('click',()=>{started=true;load(true);start.textContent='�
 sync.addEventListener('click',()=>{started=true;load(true);});
 document.addEventListener('visibilitychange',()=>{if(!document.hidden)load(false);});
 window.onYouTubeIframeAPIReady=function(){
- yt=new YT.Player('kids-live-youtube',{width:'100%',height:'100%',playerVars:{playsinline:1,rel:0,origin:location.origin},events:{onReady:function(){ytReady=true;load(true);},onError:function(){start.textContent='YouTube episode unavailable — try again';},onStateChange:function(e){if(e.data===YT.PlayerState.ENDED)load(true);}}});
+ yt=new YT.Player('kids-live-youtube',{width:'100%',height:'100%',playerVars:{playsinline:1,rel:0,origin:location.origin},events:{onReady:function(){ytReady=true;load(true);},onError:function(e){start.textContent='Episode blocked by YouTube (error '+e.data+')';clockEl.textContent='YouTube cannot play this episode here. Open the official playlist on YouTube to watch.';},onAutoplayBlocked:function(){start.textContent='▶ Tap to enable playback';},onStateChange:function(e){if(e.data===YT.PlayerState.ENDED)load(true);}}});
 };
 const script=document.createElement('script');script.src='https://www.youtube.com/iframe_api';document.head.appendChild(script);
 load(true);setInterval(()=>load(false),3000);
