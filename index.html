@@ -304,6 +304,18 @@ a.btn{text-decoration:none;display:inline-block}
 .av-lock{position:absolute;top:6px;right:6px;background:var(--gold);color:var(--gold-ink);font-family:var(--display);font-weight:700;font-size:.85rem;border-radius:999px;padding:2px 9px}
 @media (max-width:760px){.av{grid-template-columns:1fr}.pp-pill{padding:6px 11px;font-size:.9rem}.pp-pill .pp-word{display:none}.av-items{grid-template-columns:repeat(2,minmax(0,1fr))}}
 
+/* Reading Rainbow show page */
+#reading-rainbow{display:grid;gap:16px}
+.rr-hero{display:grid;grid-template-columns:minmax(0,1fr);gap:18px;align-items:center;background:linear-gradient(135deg,#ffe3f1,#e3ecff 50%,#e6fff0);border-radius:22px;padding:16px;border:2px solid var(--line)}
+@media(min-width:760px){.rr-hero{grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);padding:20px}}
+.rr-hero img{width:100%;height:auto;aspect-ratio:16/9;object-fit:cover;border-radius:16px;display:block}
+.rr-text{display:grid;gap:8px;color:#2a1615}
+.rr-text h2{margin:0;font-size:clamp(1.9rem,4vw,2.6rem)}
+.rr-text h2::before{display:none}
+.rr-text p{margin:0}
+.rr-kind{font-family:var(--display);font-weight:700;font-size:.8rem;letter-spacing:.08em;text-transform:uppercase;color:#7a3fc4}
+.rr-host{font-family:var(--display);font-weight:600;color:#5a2f9a}
+.rr-eps{font-family:var(--display);font-weight:700;font-size:1.3rem;margin:4px 0 0}
 /* GNS Kids Live */
 #kids-live{display:grid;gap:16px}
 .kl-head{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
@@ -386,6 +398,7 @@ a.btn{text-decoration:none;display:inline-block}
     <a href="#featured">Featured</a>
     <a href="#videos">Videos</a>
     <a href="#kids-live">GNS Kids Live</a>
+    <a href="#reading-rainbow">Reading Rainbow</a>
     <a href="#games">Games</a>
     <a href="#avatar">My Avatar</a>
     <a href="#music">Music</a>
@@ -473,6 +486,7 @@ a.btn{text-decoration:none;display:inline-block}
     (function(){
       var LINEUP = [
         { show: 'GNS Kids', title: 'The Powers Rap', src: 'media/powers-rap.mp4', img: 'media/powers-rap-poster.jpg', blurb: 'President Justin Powers raps about being kind, sharing and treating everybody right.', color: '#b31212' },
+        { show: 'Reading Rainbow', title: 'The Lighthouse Cat', src: 'media/live/reading-rainbow-lighthouse-cat.mp4', img: 'media/live/reading-rainbow.jpg', blurb: 'Grace Langley reads the story of Pip, a little orange cat who finds a way to guide the fishing boats home through the fog.', color: '#7a3fc4' },
         { show: 'Superman', title: 'The Mad Scientist', src: 'media/live/superman-mad-scientist.mp4', img: 'media/live/superman-mad-scientist.jpg', blurb: 'A mad scientist threatens the city with his Electrothanasia Ray, and only Superman can stop it. (1941)', color: '#1f5fc4' },
         { show: 'Mighty Orbots', title: 'Episode 1', src: 'https://archive.org/download/mighty-orbots-1/TITLE_03_mpeg4.mp4', img: 'media/live/mighty-orbots-2.jpg', blurb: 'Rob and his team of robots combine into the Mighty Orbots to protect the galaxy.', color: '#e0731c' },
         { show: 'Superman', title: 'The Mechanical Monsters', src: 'media/live/superman-mechanical-monsters.mp4', img: 'media/live/superman-mechanical-monsters.jpg', blurb: 'Giant flying robots are robbing banks all over town. Superman takes them on. (1941)', color: '#1f5fc4' },
@@ -550,6 +564,25 @@ a.btn{text-decoration:none;display:inline-block}
       load(idx, false); paintBtns();
     })();
     </script>
+    <section id="reading-rainbow" aria-labelledby="rr-heading">
+      <div class="rr-hero">
+        <img src="media/live/reading-rainbow.jpg" alt="Reading Rainbow title card" width="1280" height="720">
+        <div class="rr-text">
+          <span class="rr-kind">GNS Kids Show · Storytime</span>
+          <h2 id="rr-heading">Reading Rainbow</h2>
+          <p class="rr-host">Hosted by Grace Langley</p>
+          <p>Grace settles in with a good book, the pages come to life, and the whole story gets read aloud, start to finish.</p>
+          <div class="row"><a class="btn" href="#rr-ep1">Watch Episode 1</a><a class="btn ghost" href="#kids-live">Catch it on GNS Kids Live</a></div>
+        </div>
+      </div>
+      <h3 class="rr-eps">Episodes</h3>
+      <div class="vids">
+        <article class="vcard" id="rr-ep1">
+          <div class="vframe"><video src="media/live/reading-rainbow-lighthouse-cat.mp4" poster="media/live/reading-rainbow.jpg" controls playsinline preload="none" aria-label="Reading Rainbow, Episode 1: The Lighthouse Cat"></video></div>
+          <div class="vinfo"><p class="vmeta">Episode 1 · 6:05</p><h3>The Lighthouse Cat</h3><p>At the edge of the sea lives Pip, a small orange cat at the top of a lighthouse. When the fog rolls in so thick the great lamp can't reach the boats, Pip finds another way to bring the fishermen home.</p></div>
+        </article>
+      </div>
+    </section>
     <section id="videos"><h2>Videos</h2>
       <div class="vids">
         <article class="vcard" id="vid-powers-rap">
